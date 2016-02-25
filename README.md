@@ -1,0 +1,2 @@
+# Dauber.Azure
+Azure utilities.
