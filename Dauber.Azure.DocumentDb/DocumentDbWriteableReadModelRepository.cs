@@ -9,6 +9,8 @@ using Dauber.Core.Contracts;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Client.TransientFaultHandling;
+using Newtonsoft.Json;
+using static System.String;
 
 namespace Dauber.Azure.DocumentDb
 {
@@ -45,7 +47,7 @@ namespace Dauber.Azure.DocumentDb
         {
             DeleteAsync(item).Wait();
         }
-        
+
         public async Task DeleteAsync<T>(T item) where T : IViewModel
         {
             var documentLink = GetDocumentLink<T>(item.Id.ToString());
@@ -71,19 +73,7 @@ namespace Dauber.Azure.DocumentDb
         public void Insert<T>(IEnumerable<T> items) where T : IViewModel
         {
             InsertAsync(items).Wait();
-        }
-
-        public async Task UpdateAsync<T>(T item) where T : IViewModel
-        {
-            var collectionLink = await GetCollectionLinkAsync<T>();
-            var client = await ClientFactory.GetClientAsync(Settings);
-            await client.UpsertDocumentAsync(collectionLink, item);
-        }
-        
-        public void Update<T>(T item) where T : IViewModel
-        {
-            UpdateAsync(item).Wait();
-        }
+        }        
 
         public async Task InsertAsync<T>(IEnumerable<T> items) where T : IViewModel
         {
@@ -101,32 +91,22 @@ namespace Dauber.Azure.DocumentDb
             await client.CreateDocumentAsync(collectionLink, item);
         }
 
-        public void Save<T>(T item) where T : IViewModel
+        public void Update<T>(T item) where T : IViewModel
         {
-            SaveAsync(item).Wait();
+            UpdateAsync(item).Wait();
         }
 
-        public async Task SaveAsync<T>(T item) where T : IViewModel
+        public async Task UpdateAsync<T>(T item) where T : IViewModel
         {
+            if (IsNullOrEmpty(item.ETag))
+            {
+                throw new OptimisticConcurrencyEtagMissingException($"An attempt to update {item.DocType} {item.ETag} without an ETag. Use T GetAsync<T>(id) instead of IQueryable<T> GetAsync<T>() to get a reference that can be updated.");
+            }
+
             var documentLink = GetDocumentLink<T>(item.Id.ToString());
             var client = await ClientFactory.GetClientAsync(Settings);
-            await client.ReplaceDocumentAsync(documentLink, item);
-        }
-
-        public void Truncate<T>() where T : IViewModel
-        {
-            throw new NotImplementedException();
-            //TruncateAsync<T>().Wait();
-        }
-
-        public async Task TruncateAsync<T>() where T : IViewModel
-        {
-            throw new NotImplementedException();
-            //Logger.Information(Common.LoggerContext, "Deleting all instance of type {0}", typeof(T).Name);
-
-            //var collectionLink = await GetCollectionLinkAsync<T>();
-            //var client = await ClientFactory.GetClientAsync(Settings);
-            //await client.DeleteDocumentCollectionAsync(collectionLink);
+                        
+            await client.ReplaceDocumentAsync(documentLink, item, GetOptimisticConcurrency(item.ETag));           
         }
 
         public async Task DeleteDatabaseAsync()
@@ -135,6 +115,19 @@ namespace Dauber.Azure.DocumentDb
 
             var client = await ClientFactory.GetClientAsync(Settings);
             await client.DeleteDatabaseAsync(UriFactory.CreateDatabaseUri(Settings.DocumentDbRepositoryDatabaseId));
+        }
+
+
+        private RequestOptions GetOptimisticConcurrency(string eTag)
+        {
+            return new RequestOptions
+            {
+                AccessCondition = new AccessCondition
+                {
+                    Condition = eTag,
+                    Type = AccessConditionType.IfMatch
+                }
+            };
         }
     }
 }

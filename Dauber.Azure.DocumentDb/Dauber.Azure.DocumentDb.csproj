@@ -31,9 +31,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dauber.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dauber.Core.1.0.0.0\lib\net452\Dauber.Core.dll</HintPath>
+    <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Dauber.Core, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Core.1.0.0.4\lib\net452\Dauber.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HighIronRanch.Core">
+      <HintPath>..\Dauber.Cqrs.Azure.ServiceBus\packages\HighIronRanch.Core.1.0.8.0\lib\net45\HighIronRanch.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.Documents.Client, Version=1.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.5.3\lib\net40\Microsoft.Azure.Documents.Client.dll</HintPath>
@@ -83,6 +90,7 @@
     <Compile Include="DocumentDbWriteableReadModelRepository.cs" />
     <Compile Include="IReliableReadDocumentClientFactory.cs" />
     <Compile Include="IReliableReadWriteDocumentClientFactory.cs" />
+    <Compile Include="OptimisticConcurrencyEtagMissingException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReliableReadWriteDocumentClientFactory.cs" />
   </ItemGroup>

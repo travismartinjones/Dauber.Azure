@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Dauber.Core;
 using Dauber.Core.Contracts;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
@@ -13,12 +12,13 @@ namespace Dauber.Azure.DocumentDb
     {
         protected readonly IDocumentDbSettings Settings;
         protected readonly IReliableReadWriteDocumentClientFactory ClientFactory;
-        protected readonly ILogger Logger;
+        protected readonly Core.ILogger Logger;
 
         protected Uri CollectionUri;
 
-        public DocumentDbReadModelRepository(IDocumentDbSettings settings, IReliableReadWriteDocumentClientFactory clientFactory, ILogger logger)
+        public DocumentDbReadModelRepository(IDocumentDbSettings settings, IReliableReadWriteDocumentClientFactory clientFactory, Core.ILogger logger)
         {
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
             Settings = settings;
             ClientFactory = clientFactory;
             Logger = logger;
@@ -82,7 +82,9 @@ namespace Dauber.Azure.DocumentDb
             var documentLink = GetDocumentLink<T>(id.ToString());
             var client = await ClientFactory.GetClientAsync(Settings);
             var response = await client.ReadDocumentAsync(documentLink);
-            return JsonConvert.DeserializeObject<T>(response.Resource.ToString());
+            var viewModel = JsonConvert.DeserializeObject<T>(response.Resource.ToString());
+            viewModel.ETag = response.Resource.ETag;
+            return viewModel;
         }
 
         public T Get<T>(Guid id) where T : IViewModel, new()
