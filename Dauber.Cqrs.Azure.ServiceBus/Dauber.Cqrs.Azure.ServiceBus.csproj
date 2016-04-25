@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=1.0.1.19, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HighIronRanch.Azure.ServiceBus.1.0.1.19\lib\net45\HighIronRanch.Azure.ServiceBus.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.1.1\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
       <Private>True</Private>
@@ -105,11 +101,18 @@
   <ItemGroup>
     <Compile Include="CommandBus.cs" />
     <Compile Include="EventBus.cs" />
+    <Compile Include="IAsyncCommandBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HighIronRanch.Azure\src\HighIronRanch.Azure.ServiceBus\HighIronRanch.Azure.ServiceBus.csproj">
+      <Project>{e874a4ad-8c4d-4ca8-a8a7-6320dff04a5c}</Project>
+      <Name>HighIronRanch.Azure.ServiceBus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

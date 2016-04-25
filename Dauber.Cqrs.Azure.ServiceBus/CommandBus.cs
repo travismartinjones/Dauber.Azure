@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using HighIronRanch.Azure.ServiceBus;
+using SimpleCqrs.Commanding;
 
-namespace Cqrs.Azure.ServiceBus
+namespace Dauber.Cqrs.Azure.ServiceBus
 {
-    public class CommandBus : SimpleCqrs.Commanding.ICommandBus
+    public class CommandBus : IAsyncCommandBus
     {
         private readonly IServiceBusWithHandlers _serviceBus;
 
@@ -12,15 +14,24 @@ namespace Cqrs.Azure.ServiceBus
             _serviceBus = serviceBus;
         }
 
-        public int Execute<TCommand>(TCommand command) where TCommand : SimpleCqrs.Commanding.ICommand
+        public int Execute<TCommand>(TCommand command) where TCommand : ICommand
         {
-            throw new NotImplementedException("Haven't gotten to this yet.");
+            throw new NotImplementedException();
         }
 
-        public void Send<TCommand>(TCommand command) where TCommand : SimpleCqrs.Commanding.ICommand
+        public Task<int> ExecuteAsync<TCommand>(TCommand command) where TCommand : ICommand
         {
-            var task = _serviceBus.SendAsync((HighIronRanch.Azure.ServiceBus.Contracts.ICommand)command);
-            task.Wait();
+            throw new NotImplementedException();
+        }
+
+        public void Send<TCommand>(TCommand command) where TCommand : ICommand
+        {
+            SendAsync(command).Wait();
+        }
+        
+        public async Task SendAsync<TCommand>(TCommand command) where TCommand : ICommand
+        {
+            await _serviceBus.SendAsync((HighIronRanch.Azure.ServiceBus.Contracts.ICommand)command);
         }
     }
 }
