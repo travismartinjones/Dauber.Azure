@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
+using Dauber.Commands.Core;
+using Dauber.Core.Container;
 using HighIronRanch.Azure.ServiceBus;
 using SimpleCqrs.Commanding;
 
@@ -31,6 +34,22 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         
         public async Task SendAsync<TCommand>(TCommand command) where TCommand : ICommand
         {
+            ICommandValidator<TCommand> validator = IoC.TryGetInstance<ICommandValidator<TCommand>>();
+
+            if (validator != null)
+            {
+                var result = validator.Validate(command);
+                if (!result.IsValid)
+                {
+                    var sb = new StringBuilder();
+
+                    foreach (var error in result.Errors)
+                        sb.AppendLine(error.ValidationMessage);
+
+                    throw new CommandValidationException(sb.ToString());
+                }
+            }
+
             await _serviceBus.SendAsync((HighIronRanch.Azure.ServiceBus.Contracts.ICommand)command);
         }
     }

@@ -31,6 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Dauber.Commands.Core, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Commands.Core.1.0.0.2\lib\net45\Dauber.Commands.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Dauber.Core, Version=1.0.0.20, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Core.1.0.0.20\lib\portable45-net45+win8\Dauber.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.1.1\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
       <Private>True</Private>
@@ -83,6 +95,14 @@
       <HintPath>packages\SimpleCqrs.1.0\lib\SimpleCqrs.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="StructureMap, Version=3.1.7.350, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\structuremap.3.1.7.350\lib\net40\StructureMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="StructureMap.Net4, Version=3.1.7.350, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\structuremap.3.1.7.350\lib\net40\StructureMap.Net4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -113,6 +133,9 @@
       <Project>{e874a4ad-8c4d-4ca8-a8a7-6320dff04a5c}</Project>
       <Name>HighIronRanch.Azure.ServiceBus</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
