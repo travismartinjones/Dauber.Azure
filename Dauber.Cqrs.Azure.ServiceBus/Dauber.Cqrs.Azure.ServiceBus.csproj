@@ -35,20 +35,20 @@
       <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dauber.Commands.Core, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dauber.Commands.Core.1.0.0.2\lib\net45\Dauber.Commands.Core.dll</HintPath>
+    <Reference Include="Dauber.Commands.Core, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Commands.Core.1.0.0.3\lib\net45\Dauber.Commands.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dauber.Core, Version=1.0.0.20, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dauber.Core.1.0.0.20\lib\portable45-net45+win8\Dauber.Core.dll</HintPath>
+    <Reference Include="Dauber.Core, Version=1.0.0.25, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Core.1.0.0.25\lib\portable45-net45+win8\Dauber.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.1.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.1.1\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.TableStorage, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HighIronRanch.Azure.TableStorage.1.0.0.3\lib\net45\HighIronRanch.Azure.TableStorage.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.TableStorage, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.TableStorage.1.0.0.4\lib\net45\HighIronRanch.Azure.TableStorage.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HighIronRanch.Core, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
@@ -87,8 +87,8 @@
       <HintPath>packages\WindowsAzure.Storage.5.0.2\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SimpleCqrs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

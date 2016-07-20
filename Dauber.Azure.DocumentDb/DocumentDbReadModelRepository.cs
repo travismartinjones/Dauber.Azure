@@ -76,6 +76,20 @@ namespace Dauber.Azure.DocumentDb
             task.Wait();
             return task.Result;
         }
+        
+        public async Task<IQueryable<T>> GetAsync<T>(string query) where T : new()
+        {
+            var collectionLink = await GetCollectionLinkAsync<T>();
+            var client = await ClientFactory.GetClientAsync(Settings);
+            return client.CreateDocumentQuery<T>(collectionLink, query);            
+        }
+
+        public IQueryable<T> Get<T>(string query) where T : new()
+        {
+            var task = GetAsync<T>(query);
+            task.Wait();
+            return task.Result;
+        }
 
         public async Task<T> GetAsync<T>(Guid id) where T : IViewModel, new()
         {
