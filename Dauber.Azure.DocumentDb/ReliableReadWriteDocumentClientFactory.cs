@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Dauber.Azure.DocumentDb
     {
         private readonly ILogger _logger;
 
-        private readonly IDictionary<string, IReliableReadWriteDocumentClient> _clients = new Dictionary<string, IReliableReadWriteDocumentClient>();
+        private readonly ConcurrentDictionary<string, IReliableReadWriteDocumentClient> _clients = new ConcurrentDictionary<string, IReliableReadWriteDocumentClient>();
 
         public ReliableReadWriteDocumentClientFactory(ILogger logger)
         {

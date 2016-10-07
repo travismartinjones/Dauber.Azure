@@ -35,16 +35,20 @@
       <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dauber.Commands.Core, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dauber.Commands.Core.1.0.0.3\lib\net45\Dauber.Commands.Core.dll</HintPath>
+    <Reference Include="Dauber.Core, Version=1.0.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Core.1.0.1.2\lib\portable45-net45+win8\Dauber.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dauber.Core, Version=1.0.0.25, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dauber.Core.1.0.0.25\lib\portable45-net45+win8\Dauber.Core.dll</HintPath>
+    <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.1.1\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=1.0.1.28, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.1.0.1.28\lib\net45\HighIronRanch.Azure.ServiceBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.1.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.1.2\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HighIronRanch.Azure.TableStorage, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
@@ -55,8 +59,8 @@
       <HintPath>packages\HighIronRanch.Core.1.0.8.0\lib\net45\HighIronRanch.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HighIronRanch.Cqrs.EventStore.Azure, Version=1.0.0.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HighIronRanch.Cqrs.EventStore.Azure.1.0.0.5\lib\net45\HighIronRanch.Cqrs.EventStore.Azure.dll</HintPath>
+    <Reference Include="HighIronRanch.Cqrs.EventStore.Azure, Version=1.0.0.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Cqrs.EventStore.Azure.1.0.0.7\lib\net45\HighIronRanch.Cqrs.EventStore.Azure.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -91,8 +95,8 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SimpleCqrs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\SimpleCqrs.1.0\lib\SimpleCqrs.dll</HintPath>
+    <Reference Include="SimpleCqrs, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleCqrs.1.0.2\lib\net40\SimpleCqrs.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="StructureMap, Version=3.1.7.350, Culture=neutral, processorArchitecture=MSIL">
@@ -119,7 +123,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
     <Compile Include="CommandBus.cs" />
+    <Compile Include="Event.cs" />
     <Compile Include="EventBus.cs" />
     <Compile Include="IAsyncCommandBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -127,12 +133,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\HighIronRanch.Azure\src\HighIronRanch.Azure.ServiceBus\HighIronRanch.Azure.ServiceBus.csproj">
-      <Project>{e874a4ad-8c4d-4ca8-a8a7-6320dff04a5c}</Project>
-      <Name>HighIronRanch.Azure.ServiceBus</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Dauber.Commands.Core;
 using Dauber.Core.Container;
 using HighIronRanch.Azure.ServiceBus;
 using SimpleCqrs.Commanding;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace Dauber.Cqrs.Azure.ServiceBus
 {
@@ -32,25 +34,24 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             SendAsync(command).Wait();
         }
         
-        public async Task SendAsync<TCommand>(TCommand command) where TCommand : ICommand
+        public async Task SendAsync<TCommand>(TCommand command, DateTime? enqueueTime = null) where TCommand : ICommand
         {
-            ICommandValidator<TCommand> validator = IoC.TryGetInstance<ICommandValidator<TCommand>>();
+            var validators = IoC.GetAllInstances<IValidator<TCommand>>();
 
-            if (validator != null)
-            {
+            var errors = new List<ValidationFailure>();
+
+            foreach(var validator in validators)
+            { 
                 var result = validator.Validate(command);
+
                 if (!result.IsValid)
-                {
-                    var sb = new StringBuilder();
-
-                    foreach (var error in result.Errors)
-                        sb.AppendLine(error.ValidationMessage);
-
-                    throw new CommandValidationException(sb.ToString());
-                }
+                    errors.AddRange(result.Errors);
             }
 
-            await _serviceBus.SendAsync((HighIronRanch.Azure.ServiceBus.Contracts.ICommand)command);
+            if(errors.Count > 0)
+                throw new ValidationException(errors);
+
+            await _serviceBus.SendAsync((HighIronRanch.Azure.ServiceBus.Contracts.ICommand)command, enqueueTime);
         }
     }
 }

@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Dauber.Azure.DocumentDb")]
-[assembly: AssemblyDescription("Utitities for working with Azure DocumentDB.")]
+[assembly: AssemblyTitle("Dauber.Azure.Blob")]
+[assembly: AssemblyDescription("Dauber Azure Blob Client")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dauber Applications")]
-[assembly: AssemblyProduct("Dauber.Azure.DocumentDb")]
-[assembly: AssemblyCopyright("Copyright ©  2016 Dauber Applications, LLC")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Dauber Application")]
+[assembly: AssemblyProduct("Dauber.Azure.Blob")]
+[assembly: AssemblyCopyright("Copyright ©  2016 Dauber Applications")]
+[assembly: AssemblyTrademark("Dauber")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8f4dfa70-bfe1-4385-8905-9ac2843d72f2")]
+[assembly: Guid("bb38975b-d995-43fd-9eac-1df62d3a5664")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.16")]
-[assembly: AssemblyFileVersion("1.0.0.16")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -1,8 +1,10 @@
 ﻿
 using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dauber.Core.Contracts;
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 
@@ -76,15 +78,29 @@ namespace Dauber.Azure.DocumentDb
             task.Wait();
             return task.Result;
         }
-        
-        public async Task<IQueryable<T>> GetAsync<T>(string query) where T : new()
+
+
+        public async Task<IQueryable<TReturnType>> GetAsync<TEntityType, TReturnType>(string query) where TEntityType : IViewModel, new() where TReturnType : new()
         {
-            var collectionLink = await GetCollectionLinkAsync<T>();
+            var collectionLink = await GetCollectionLinkAsync<TEntityType>();
             var client = await ClientFactory.GetClientAsync(Settings);
-            return client.CreateDocumentQuery<T>(collectionLink, query);            
+            return client.CreateDocumentQuery<TReturnType>(collectionLink, query);
         }
 
-        public IQueryable<T> Get<T>(string query) where T : new()
+
+        public IQueryable<TReturnType> Get<TEntityType, TReturnType>(string query) where TEntityType : IViewModel, new() where TReturnType : new()
+        {
+            var task = GetAsync<TEntityType, TReturnType>(query);
+            task.Wait();
+            return task.Result;
+        }
+
+        public async Task<IQueryable<T>> GetAsync<T>(string query) where T : IViewModel, new()
+        {
+            return await GetAsync<T, T>(query);
+        }
+
+        public IQueryable<T> Get<T>(string query) where T : IViewModel, new()
         {
             var task = GetAsync<T>(query);
             task.Wait();
@@ -93,12 +109,23 @@ namespace Dauber.Azure.DocumentDb
 
         public async Task<T> GetAsync<T>(Guid id) where T : IViewModel, new()
         {
-            var documentLink = GetDocumentLink<T>(id.ToString());
-            var client = await ClientFactory.GetClientAsync(Settings);
-            var response = await client.ReadDocumentAsync(documentLink);
-            var viewModel = JsonConvert.DeserializeObject<T>(response.Resource.ToString());
-            viewModel.ETag = response.Resource.ETag;
-            return viewModel;
+            try
+            {
+                var documentLink = GetDocumentLink<T>(id.ToString());
+                var client = await ClientFactory.GetClientAsync(Settings);
+                var response = await client.ReadDocumentAsync(documentLink);
+                var viewModel = JsonConvert.DeserializeObject<T>(response.Resource.ToString());
+                viewModel.ETag = response.Resource.ETag;
+                return viewModel;
+            }
+            catch (DocumentClientException ex)
+            {
+                // don't throw an exception if the resource is not found, instead, indicate this by returning null
+                if(ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    return default(T);
+
+                throw;
+            }
         }
 
         public T Get<T>(Guid id) where T : IViewModel, new()
