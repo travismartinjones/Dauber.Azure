@@ -1,4 +1,4 @@
-﻿namespace Dauber.Azure.Blob
+﻿namespace Dauber.Azure.Blob.Contracts
 {
     public class Blob
     {

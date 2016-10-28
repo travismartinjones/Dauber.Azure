@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Dauber.Azure.Blob")]
-[assembly: AssemblyDescription("Dauber Azure Blob Client")]
+[assembly: AssemblyTitle("Dauber.Azure.Blob.Contracts")]
+[assembly: AssemblyDescription("Dauber Azure Blob Contracts")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dauber Application")]
-[assembly: AssemblyProduct("Dauber.Azure.Blob")]
+[assembly: AssemblyCompany("Dauber Applications")]
+[assembly: AssemblyProduct("Dauber.Azure.Blob.Contracts")]
 [assembly: AssemblyCopyright("Copyright ©  2016 Dauber Applications")]
 [assembly: AssemblyTrademark("Dauber")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bb38975b-d995-43fd-9eac-1df62d3a5664")]
+[assembly: Guid("0cdd02b6-d879-4569-8654-a86d3b365a4d")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.2")]
-[assembly: AssemblyFileVersion("1.0.0.2")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

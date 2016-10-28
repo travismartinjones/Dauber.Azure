@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Dauber.Azure.Blob
+namespace Dauber.Azure.Blob.Contracts
 {
     public interface IBlobStore
     {

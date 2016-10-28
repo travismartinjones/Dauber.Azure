@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Dauber.Azure.Blob.Contracts;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -43,14 +44,14 @@ namespace Dauber.Azure.Blob
             await blockBlob.DeleteAsync();
         }
 
-        public async Task<Blob> GetAsync(string blobUrl)
+        public async Task<Contracts.Blob> GetAsync(string blobUrl)
         {
             var blockBlob = GetBlockBlob(blobUrl);            
 
             using (var memoryStream = new MemoryStream())
             {
                 await blockBlob.DownloadToStreamAsync(memoryStream);
-                return new Blob
+                return new Contracts.Blob
                 {
                     ContentType = blockBlob.Properties.ContentType,
                     Data = memoryStream.ToArray()
