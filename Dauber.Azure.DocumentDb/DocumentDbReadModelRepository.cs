@@ -66,7 +66,7 @@ namespace Dauber.Azure.DocumentDb
         {
             var collectionLink = await GetCollectionLinkAsync<T>();
             var client = await ClientFactory.GetClientAsync(Settings);
-            var queryable = client.CreateDocumentQuery<T>(collectionLink);
+            var queryable = client.CreateDocumentQuery<T>(collectionLink, new FeedOptions { EnableCrossPartitionQuery = true, MaxDegreeOfParallelism = 10, MaxBufferedItemCount = 100});
 
             // filter the entity by type due to multiple document types sharing the same collection
             return queryable.Where(x => x.DocType == typeof(T).Name);

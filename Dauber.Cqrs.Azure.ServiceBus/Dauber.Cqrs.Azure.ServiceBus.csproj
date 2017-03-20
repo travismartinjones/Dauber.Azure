@@ -123,8 +123,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregateCommandHandler.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="CommandBus.cs" />
+    <Compile Include="CommandErrorEvent.cs" />
+    <Compile Include="AggregateCommandRejectedAttribute.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventBus.cs" />
     <Compile Include="IAsyncCommandBus.cs" />
