@@ -130,8 +130,11 @@
     <Compile Include="AggregateCommandRejectedAttribute.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventBus.cs" />
+    <Compile Include="EventHandler.cs" />
     <Compile Include="IAsyncCommandBus.cs" />
+    <Compile Include="IServiceBusTelemetryProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceBusTelemetryProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
