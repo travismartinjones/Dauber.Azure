@@ -4,8 +4,12 @@ using SimpleCqrs.Eventing;
 
 namespace Dauber.Cqrs.Azure.ServiceBus
 {
-    public class Event : DomainEvent, IEvent
+    public class Event : DomainEvent, IAggregateEvent
     {
         public Guid MessageId { get; set; } = Guid.NewGuid();
+        public string GetAggregateId()
+        {
+            return AggregateRootId.ToString();
+        }
     }
 }

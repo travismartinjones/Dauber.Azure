@@ -34,19 +34,17 @@
     <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Dauber.Core, Version=1.0.3.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dauber.Core.1.0.3.3\lib\netstandard1.4\Dauber.Core.dll</HintPath>
+    <Reference Include="Dauber.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Dauber.Core.1.1.0\lib\netstandard1.4\Dauber.Core.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.7.1.0\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=1.0.1.28, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.1.0.1.28\lib\net45\HighIronRanch.Azure.ServiceBus.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=1.0.4.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\HighIronRanch.Azure.ServiceBus.1.0.4.11\lib\net45\HighIronRanch.Azure.ServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.1.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.1.2\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.4\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="HighIronRanch.Azure.TableStorage, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HighIronRanch.Azure.TableStorage.1.1.0\lib\net45\HighIronRanch.Azure.TableStorage.dll</HintPath>
@@ -84,8 +82,8 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleCqrs, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.SimpleCqrs.1.0.1.0\lib\net40\SimpleCqrs.dll</HintPath>
+    <Reference Include="SimpleCqrs, Version=1.0.3.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\SimpleCqrs.1.0.3.1\lib\net40\SimpleCqrs.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.5.1\lib\net45\StructureMap.dll</HintPath>
@@ -125,6 +123,9 @@
       <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reflection.TypeExtensions.4.3.0\lib\net46\System.Reflection.TypeExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>

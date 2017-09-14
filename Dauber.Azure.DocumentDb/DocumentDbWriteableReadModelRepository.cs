@@ -100,7 +100,7 @@ namespace Dauber.Azure.DocumentDb
         {
             if (IsNullOrEmpty(item.ETag))
             {
-                throw new OptimisticConcurrencyEtagMissingException($"An attempt to update {item.DocType} {item.ETag} without an ETag. Use T GetAsync<T>(id) instead of IQueryable<T> GetAsync<T>() to get a reference that can be updated.");
+                throw new OptimisticConcurrencyEtagMissingException($"An attempt to update {item.DocType} {item.ETag} without an ETag. If using a custom query, ensure the _etag property is included in your result set.");
             }
 
             var documentLink = GetDocumentLink<T>(item.Id.ToString());

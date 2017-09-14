@@ -114,8 +114,7 @@ namespace Dauber.Azure.DocumentDb
                 var documentLink = GetDocumentLink<T>(id.ToString());
                 var client = await ClientFactory.GetClientAsync(Settings);
                 var response = await client.ReadDocumentAsync(documentLink);
-                var viewModel = JsonConvert.DeserializeObject<T>(response.Resource.ToString());
-                viewModel.ETag = response.Resource.ETag;
+                var viewModel = JsonConvert.DeserializeObject<T>(response.Resource.ToString());                
                 return viewModel;
             }
             catch (DocumentClientException ex)
