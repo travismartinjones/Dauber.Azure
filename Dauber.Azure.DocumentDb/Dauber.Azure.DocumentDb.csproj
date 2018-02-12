@@ -148,6 +148,7 @@
     <Compile Include="OptimisticConcurrencyEtagMissingException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReliableReadWriteDocumentClientFactory.cs" />
+    <Compile Include="Helpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
