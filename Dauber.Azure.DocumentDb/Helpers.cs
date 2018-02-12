@@ -9,7 +9,12 @@ namespace Dauber.Azure.DocumentDb
     {
         public static string GetPropertySelectNames<T>(string prefix = "c") where T : ViewModel
         {
-            return $"{prefix}.{string.Join($", {prefix}.", typeof(T).GetProperties().Select(p => p.GetCustomAttribute<JsonPropertyAttribute>()).Select(jp => jp.PropertyName))}";
+            var properties = typeof(T).GetProperties().ToList();
+            var propertyNames = properties
+                .Where(p => p.GetCustomAttribute<JsonIgnoreAttribute>() == null)
+                .Select(p => p.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName ?? p.Name)
+                .ToList();            
+            return $"{prefix}.{string.Join($", {prefix}.", propertyNames)}";
         }
     }
 }

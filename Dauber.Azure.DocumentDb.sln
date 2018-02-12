@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.DocumentDb", "Dauber.Azure.DocumentDb\Dauber.Azure.DocumentDb.csproj", "{8F4DFA70-BFE1-4385-8905-9AC2843D72F2}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.Blob", "Dauber.Azure.Blob\Dauber.Azure.Blob.csproj", "{BB38975B-D995-43FD-9EAC-1DF62D3A5664}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.Blob.Contracts", "Dauber.Azure.Blob.Contracts\Dauber.Azure.Blob.Contracts.csproj", "{0CDD02B6-D879-4569-8654-A86D3B365A4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{779EC665-8266-4608-B21C-F3C731F7F396}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.DocumentDb.Test", "Dauber.Azure.DocumentDb.Test\Dauber.Azure.DocumentDb.Test.csproj", "{FD357F65-041D-49EE-99E4-E693E2E74046}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +37,18 @@ Global
 		{0CDD02B6-D879-4569-8654-A86D3B365A4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CDD02B6-D879-4569-8654-A86D3B365A4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CDD02B6-D879-4569-8654-A86D3B365A4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD357F65-041D-49EE-99E4-E693E2E74046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD357F65-041D-49EE-99E4-E693E2E74046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD357F65-041D-49EE-99E4-E693E2E74046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD357F65-041D-49EE-99E4-E693E2E74046}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FD357F65-041D-49EE-99E4-E693E2E74046} = {779EC665-8266-4608-B21C-F3C731F7F396}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F3F8285-269F-4A95-B3DA-A86C4E1D02C5}
 	EndGlobalSection
 EndGlobal
