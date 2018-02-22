@@ -34,17 +34,17 @@
     <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Dauber.Core, Version=1.1.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Dauber.Core.1.1.4\lib\netstandard1.4\Dauber.Core.dll</HintPath>
+    <Reference Include="Dauber.Core, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Core.1.1.5\lib\netstandard1.4\Dauber.Core.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.7.1.0\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=1.0.6.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HighIronRanch.Azure.ServiceBus.1.0.6.1\lib\net45\HighIronRanch.Azure.ServiceBus.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=1.0.8.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.1.0.8.1\lib\net45\HighIronRanch.Azure.ServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.4\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.6\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="HighIronRanch.Azure.TableStorage, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HighIronRanch.Azure.TableStorage.1.1.0\lib\net45\HighIronRanch.Azure.TableStorage.dll</HintPath>
@@ -52,8 +52,8 @@
     <Reference Include="HighIronRanch.Core, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HighIronRanch.Core.1.1.0\lib\net45\HighIronRanch.Core.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Cqrs.EventStore.Azure, Version=2.0.9.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HighIronRanch.Cqrs.EventStore.Azure.2.0.9.3\lib\net45\HighIronRanch.Cqrs.EventStore.Azure.dll</HintPath>
+    <Reference Include="HighIronRanch.Cqrs.EventStore.Azure, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Cqrs.EventStore.Azure.2.1.4\lib\net45\HighIronRanch.Cqrs.EventStore.Azure.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.ApplicationInsights.2.4.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>

@@ -116,8 +116,7 @@ namespace Dauber.Azure.DocumentDb
             var client = await ClientFactory.GetClientAsync(Settings);
             await client.DeleteDatabaseAsync(UriFactory.CreateDatabaseUri(Settings.DocumentDbRepositoryDatabaseId));
         }
-
-
+        
         private RequestOptions GetOptimisticConcurrency(string eTag)
         {
             return new RequestOptions
@@ -128,6 +127,42 @@ namespace Dauber.Azure.DocumentDb
                     Type = AccessConditionType.IfMatch
                 }
             };
+        }
+
+        public void Upsert<T>(T item) where T : IViewModel
+        {
+            UpsertAsync(item).Wait();
+        }
+
+        public async Task UpsertAsync<T>(T item) where T : IViewModel
+        {
+            // add in the entity type to allow multiple document types to share the same collection
+            // this is a common cost savings technique with azure document db
+            item.DocType = typeof(T).Name;
+            var collectionLink = await GetCollectionLinkAsync<T>();
+            var client = await ClientFactory.GetClientAsync(Settings);
+            await UpsertAsync(client, collectionLink, item);
+        }
+
+        public void Upsert<T>(IEnumerable<T> items) where T : IViewModel
+        {
+            UpsertAsync(items).Wait();
+        }
+
+        public async Task UpsertAsync<T>(IEnumerable<T> items) where T : IViewModel
+        {
+            var collectionLink = await GetCollectionLinkAsync<T>();
+            var client = await ClientFactory.GetClientAsync(Settings);
+            foreach (var item in items)
+            {
+                await UpsertAsync(client, collectionLink, item);
+            }
+        }
+
+        protected async Task UpsertAsync<T>(IReliableReadWriteDocumentClient client, Uri collectionLink, T item) where T : IViewModel
+        {
+            item.DocType = typeof(T).Name;
+            await client.UpsertDocumentAsync(collectionLink, item);
         }
     }
 }
