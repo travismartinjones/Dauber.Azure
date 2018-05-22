@@ -1,3 +1,13 @@
 Dauber.Cqrs.Azure.ServiceBus/packages/
 packages/
 Dauber.Cqrs.Azure.ServiceBus/Dauber.Cqrs.Azure.ServiceBus.1.0.0.20.nupkg
+.vs/
+Dauber.Azure.Blob.Contracts/obj/
+Dauber.Azure.Blob/bin/
+Dauber.Azure.Blob/obj/
+Dauber.Azure.DocumentDb.Test/bin/
+Dauber.Azure.DocumentDb.Test/obj/
+Dauber.Azure.DocumentDb/bin/
+Dauber.Azure.DocumentDb/obj/
+Dauber.Cqrs.Azure.ServiceBus/bin/
+Dauber.Cqrs.Azure.ServiceBus/obj/

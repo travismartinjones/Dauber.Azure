@@ -40,13 +40,16 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             }
             catch (AggregateException exceptions)
             {
+                var userId = (Guid?)typeof(T).GetProperty("UserId")?.GetValue(message);
+                
                 await _bus.PublishAsync(new TCommandErrorEvent
                 {
                     Id = message.AggregateRootId,
                     CommandMessageId = message.MessageId,
                     CommandName = typeof(T).Name,
                     EventDate = _dateTime.UtcNow,
-                    Errors = exceptions.InnerExceptions.Select(x => x.Message).ToList()
+                    Errors = exceptions.InnerExceptions.Select(x => x.Message).ToList(),
+                    UserId = userId
                 });
 
                 if (exceptions.InnerExceptions.Any(IsExceptionToBeRethrown))
@@ -57,13 +60,15 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             }
             catch (Exception ex)
             {                
+                var userId = (Guid?)typeof(T).GetProperty("UserId")?.GetValue(message);
                 await _bus.PublishAsync(new TCommandErrorEvent
                 {
                     Id = message.AggregateRootId,
                     CommandMessageId = message.MessageId,
                     CommandName = typeof(T).Name,
                     EventDate = _dateTime.UtcNow,
-                    Errors = new List<string> { ex.Message }
+                    Errors = new List<string> { ex.Message },
+                    UserId = userId
                 });
 
                 if (IsExceptionToBeRethrown(ex))
