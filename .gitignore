@@ -12,3 +12,5 @@ Dauber.Azure.DocumentDb/obj/
 Dauber.Cqrs.Azure.ServiceBus/bin/
 Dauber.Cqrs.Azure.ServiceBus/obj/
 *.nupkg
+**/obj/
+**/bin/
