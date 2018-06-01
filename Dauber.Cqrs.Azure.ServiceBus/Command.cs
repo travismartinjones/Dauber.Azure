@@ -7,6 +7,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
     public class Command : CommandWithAggregateRootId, IAggregateCommand
     {
         public Guid MessageId { get; set; } = Guid.NewGuid();
+        public Guid? CorrelationId { get; set; }
         public string GetAggregateId()
         {
             return AggregateRootId.ToString();
