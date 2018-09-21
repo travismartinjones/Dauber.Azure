@@ -48,6 +48,45 @@ namespace Dauber.Azure.DocumentDb
             DeleteAsync(item).Wait();
         }
 
+        public void Delete<T>(IEnumerable<T> items) where T : IViewModel
+        {
+            DeleteAsync<T>(items).Wait();
+        }
+
+        public async Task DeleteAsync<T>(params Guid[] ids) where T : IViewModel
+        {
+            var query = $@"SELECT * FROM c WHERE c.id IN ['{string.Join("','",ids)}']";
+            await DeleteAsync<T>(query);
+        }
+
+        public void Delete<T>(params Guid[] ids) where T : IViewModel
+        {
+            DeleteAsync<T>(ids).Wait();
+        }
+
+        public async Task DeleteAsync<T>(IEnumerable<T> items) where T : IViewModel
+        {
+            if (items == null) return;
+            var evaluatedItems = items as T[] ?? items.ToArray();
+            if(!evaluatedItems.Any()) return;
+            await DeleteAsync<T>(evaluatedItems.Select(x => x.Id).ToArray());
+        }
+
+        public void Delete<T>(string query) where T : IViewModel
+        {
+            DeleteAsync<T>(query).Wait();
+        }
+
+        public async Task DeleteAsync<T>(string query) where T : IViewModel
+        {
+            var client = await ClientFactory.GetClientAsync(Settings);
+
+            if(!query.Contains("DocType") && !query.Contains(typeof(T).Name))
+               throw new Exception($"The provided query is not filtering to DocType = '{typeof(T).Name}'");
+
+            await client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(Settings.DocumentDbRepositoryDatabaseId, Settings.DocumentDbRepositoryCollectionId, "bulkDelete"), query);            
+        }
+
         public async Task DeleteAsync<T>(T item) where T : IViewModel
         {
             var documentLink = GetDocumentLink<T>(item.Id.ToString());

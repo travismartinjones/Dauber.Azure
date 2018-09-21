@@ -22,7 +22,12 @@ namespace Dauber.Cqrs.Saga
             if (!evt.CorrelationId.HasValue) return;
 
             var sagaState = await _sagaStateRepository.Read(evt.CorrelationId.Value);
+
+            if (sagaState == null) return;
+
             var result = await _eventDispatcher.OnEventAsync(sagaState.StateType, sagaState.State, evt);
+
+            if (result == null) return;
 
             if (!result.IsEventHandled) return;
 

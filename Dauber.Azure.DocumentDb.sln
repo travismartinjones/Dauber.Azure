@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.Azure.Saga", "D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.Saga", "Dauber.Cqrs.Saga\Dauber.Cqrs.Saga.csproj", "{326C398A-4308-41CB-B209-2F750C621953}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.TableStorage", "Dauber.Azure.TableStorage\Dauber.Azure.TableStorage.csproj", "{2F7DBF18-E619-4BF1-8C10-FBED0E10D08A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{326C398A-4308-41CB-B209-2F750C621953}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{326C398A-4308-41CB-B209-2F750C621953}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{326C398A-4308-41CB-B209-2F750C621953}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F7DBF18-E619-4BF1-8C10-FBED0E10D08A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7DBF18-E619-4BF1-8C10-FBED0E10D08A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7DBF18-E619-4BF1-8C10-FBED0E10D08A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7DBF18-E619-4BF1-8C10-FBED0E10D08A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

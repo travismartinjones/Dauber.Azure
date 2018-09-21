@@ -51,7 +51,8 @@ namespace Dauber.Azure.DocumentDb
         {
             if (CollectionUri != null) return CollectionUri;
 
-            await CreateCollectionIfNecessaryAsync<T>();
+            if(Settings.IsCollectionCretedIfMissing)
+                await CreateCollectionIfNecessaryAsync<T>();
 
             CollectionUri = UriFactory.CreateDocumentCollectionUri(Settings.DocumentDbRepositoryDatabaseId, Settings.DocumentDbRepositoryCollectionId);
             return CollectionUri;
@@ -79,6 +80,16 @@ namespace Dauber.Azure.DocumentDb
             return task.Result;
         }
 
+        public T GetByStoredProcedure<T>(string storedProcedureName, params dynamic[] arguments) where T : IViewModel, new()
+        {
+            return GetByStoredProcedureAsync<T>(storedProcedureName, arguments).Result;
+        }
+
+        public async Task<T> GetByStoredProcedureAsync<T>(string storedProcedureName, params dynamic[] arguments) where T : IViewModel, new()
+        {
+            var client = await ClientFactory.GetClientAsync(Settings);
+            return await client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(Settings.DocumentDbRepositoryDatabaseId, Settings.DocumentDbRepositoryCollectionId, storedProcedureName), arguments);
+        }
 
         public async Task<IQueryable<TReturnType>> GetAsync<TEntityType, TReturnType>(string query) where TEntityType : IViewModel, new() where TReturnType : new()
         {

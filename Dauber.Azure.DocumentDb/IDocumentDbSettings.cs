@@ -8,5 +8,6 @@ namespace Dauber.Azure.DocumentDb
         string DocumentDbRepositoryAuthKey { get; }
         string DocumentDbRepositoryDatabaseId { get; }
         string DocumentDbRepositoryCollectionId { get; }
+        bool IsCollectionCretedIfMissing { get; }
     }
 }

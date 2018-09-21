@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Dauber.Cqrs.Saga")]
+[assembly: AssemblyTitle("Dauber.Azure.TableStorage")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dauber Applications, LLC")]
-[assembly: AssemblyProduct("Dauber.Cqrs.Saga")]
-[assembly: AssemblyCopyright("Copyright ©  2018 Dauber Applications, LLC")]
+[assembly: AssemblyCompany("Dauber Applications")]
+[assembly: AssemblyProduct("Dauber.Azure.TableStorage")]
+[assembly: AssemblyCopyright("Copyright ©  2018 Dauber Applications")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("326c398a-4308-41cb-b209-2f750c621953")]
+[assembly: Guid("2f7dbf18-e619-4bf1-8c10-fbed0e10d08a")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.8.0")]
-[assembly: AssemblyFileVersion("1.0.8.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
