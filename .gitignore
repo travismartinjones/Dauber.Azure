@@ -14,3 +14,4 @@ Dauber.Cqrs.Azure.ServiceBus/obj/
 *.nupkg
 **/obj/
 **/bin/
+Dauber.Azure.ServiceBus/publish-nuget.bat

@@ -33,8 +33,8 @@
     <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Dauber.Core, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dauber.Core.1.9.1\lib\netstandard2.0\Dauber.Core.dll</HintPath>
+    <Reference Include="Dauber.Core, Version=1.9.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Core.1.9.4\lib\netstandard2.0\Dauber.Core.dll</HintPath>
     </Reference>
     <Reference Include="Dauber.Cqrs.Contracts, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dauber.Cqrs.Contracts.1.0.6\lib\net461\Dauber.Cqrs.Contracts.dll</HintPath>
