@@ -30,7 +30,7 @@ namespace Dauber.Azure.ServiceBus
             _db = new LiteDatabase(_dbFilename);
             var queues = _db.GetCollection<Queue>("queues");
             queues.EnsureIndex(x => x.Name);
-            var topics = _db.GetCollection<Queue>("topics");
+            var topics = _db.GetCollection<Topic>("topics");
             topics.EnsureIndex(x => x.Name);
         }
 
