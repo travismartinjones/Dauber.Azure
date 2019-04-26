@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Azure.Documents.Client.TransientFaultHandling;
+using Microsoft.Azure.Documents;
 
 namespace Dauber.Azure.DocumentDb
 {
     public interface IReliableReadWriteDocumentClientFactory
     {
-        Task<IReliableReadWriteDocumentClient> GetClientAsync(IDocumentDbSettings settings);
+        Task<IDocumentClient> GetClientAsync(IDocumentDbSettings settings);
     }
 }

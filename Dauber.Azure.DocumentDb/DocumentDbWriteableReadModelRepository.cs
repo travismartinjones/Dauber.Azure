@@ -8,7 +8,6 @@ using Dauber.Core;
 using Dauber.Core.Contracts;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Client.TransientFaultHandling;
 using Newtonsoft.Json;
 using static System.String;
 
@@ -124,7 +123,7 @@ namespace Dauber.Azure.DocumentDb
             }
         }
 
-        protected async Task InsertAsync<T>(IReliableReadWriteDocumentClient client, Uri collectionLink, T item) where T : IViewModel
+        protected async Task InsertAsync<T>(IDocumentClient client, Uri collectionLink, T item) where T : IViewModel
         {
             item.DocType = typeof(T).Name;
             await client.CreateDocumentAsync(collectionLink, item).ConfigureAwait(false);
@@ -198,7 +197,7 @@ namespace Dauber.Azure.DocumentDb
             }
         }
 
-        protected async Task UpsertAsync<T>(IReliableReadWriteDocumentClient client, Uri collectionLink, T item) where T : IViewModel
+        protected async Task UpsertAsync<T>(IDocumentClient client, Uri collectionLink, T item) where T : IViewModel
         {
             item.DocType = typeof(T).Name;
             await client.UpsertDocumentAsync(collectionLink, item).ConfigureAwait(false);

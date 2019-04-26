@@ -8,6 +8,6 @@ namespace Dauber.Azure.Blob.Contracts
         Task DeleteAsync(string blobUrl);
         Task<Blob> GetAsync(string blobUrl);
         //http://stackoverflow.com/a/30468172
-        string GetValetKeyUri(string blobUri, int secondsToExpireKey);
+        Task<string> GetValetKeyUri(string blobUri, int secondsToExpireKey);
     }
 }

@@ -12,10 +12,7 @@ namespace Dauber.Azure.Blob
         private const string PrivateContainerName = "private";
         private const string PublicContainerName = "public";
         private readonly IBlobSettings _blobSettings;
-
-        private CloudBlobContainer PublicContainer => GetPublicContainer();
-        private CloudBlobContainer PrivateContainer => GetPrivateContainer();
-
+        
         public BlobStore(IBlobSettings blobSettings)
         {
             if(blobSettings == null)
@@ -26,7 +23,7 @@ namespace Dauber.Azure.Blob
 
         public async Task<BlobCreationResponse> InsertAsync(string contentType, string blobName, byte[] data, bool isPrivate = true)
         {
-            var container = isPrivate ? PrivateContainer : PublicContainer;
+            var container = isPrivate ? await GetPrivateContainer() : await GetPublicContainer();
             var blockBlob = container.GetBlockBlobReference(blobName);            
             await blockBlob.UploadFromByteArrayAsync(data, 0, data.Length).ConfigureAwait(false);
             blockBlob.Properties.ContentType = contentType;
@@ -40,13 +37,13 @@ namespace Dauber.Azure.Blob
 
         public async Task DeleteAsync(string blobUrl)
         {
-            var blockBlob = GetBlockBlob(blobUrl);
+            var blockBlob = await GetBlockBlob(blobUrl);
             await blockBlob.DeleteAsync().ConfigureAwait(false);
         }
 
         public async Task<Contracts.Blob> GetAsync(string blobUrl)
         {
-            var blockBlob = GetBlockBlob(blobUrl);            
+            var blockBlob = await GetBlockBlob(blobUrl);            
 
             using (var memoryStream = new MemoryStream())
             {
@@ -59,17 +56,17 @@ namespace Dauber.Azure.Blob
             }
         }
 
-        private CloudBlockBlob GetBlockBlob(string blobUrl)
+        private async Task<CloudBlockBlob> GetBlockBlob(string blobUrl)
         {
             var blobName = GetBlobNameFromUrl(blobUrl);
-            var container = GetContainerForUrl(blobUrl);
+            var container = await GetContainerForUrl(blobUrl);
             return container.GetBlockBlobReference(blobName);
         }
 
-        public string GetValetKeyUri(string blobUrl, int secondsToExpireKey)
+        public async Task<string> GetValetKeyUri(string blobUrl, int secondsToExpireKey)
         {
             var blobName = GetBlobNameFromUrl(blobUrl);
-            var container = GetContainerForUrl(blobUrl);
+            var container = await GetContainerForUrl(blobUrl);
             var blob = container.GetBlockBlobReference(blobName);
 
             var sasConstraints = new SharedAccessBlobPolicy
@@ -91,31 +88,31 @@ namespace Dauber.Azure.Blob
             return blob.Name;
         }
 
-        private CloudBlobContainer GetContainerForUrl(string blobUrl)
+        private async Task<CloudBlobContainer> GetContainerForUrl(string blobUrl)
         {
             var storageAccount = CloudStorageAccount.Parse(_blobSettings.ConnectionString);
             var blob = new CloudBlockBlob(new Uri(blobUrl), storageAccount.Credentials);
-            return blob.Container.Name == PrivateContainerName ? PrivateContainer : PublicContainer;
+            return blob.Container.Name == PrivateContainerName ? await GetPrivateContainer() : await GetPublicContainer();
         }
 
-        private CloudBlobContainer GetPrivateContainer()
+        private async Task<CloudBlobContainer> GetPrivateContainer()
         {
             var storageAccount = CloudStorageAccount.Parse(_blobSettings.ConnectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(PrivateContainerName);
-            container.CreateIfNotExists();            
+            var container = blobClient.GetContainerReference(PrivateContainerName);            
+            await container.CreateIfNotExistsAsync();            
             return container;
         }
 
-        private CloudBlobContainer GetPublicContainer()
+        private async Task<CloudBlobContainer> GetPublicContainer()
         {
             var storageAccount = CloudStorageAccount.Parse(_blobSettings.ConnectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference(PublicContainerName);
 
-            if (container.CreateIfNotExists())
+            if (await container.CreateIfNotExistsAsync())
             {
-                container.SetPermissions(new BlobContainerPermissions
+                await container.SetPermissionsAsync(new BlobContainerPermissions
                 {
                     // set access to public for the container
                     PublicAccess = BlobContainerPublicAccessType.Blob

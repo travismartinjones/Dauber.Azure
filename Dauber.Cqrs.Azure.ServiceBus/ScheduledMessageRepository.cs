@@ -44,7 +44,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         
         public async Task Insert(string sessionId, string messageId, long sequenceId, string type, DateTime submitDate, DateTime scheduleEnqueueDate)
         {
-            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
             var entity = new ScheduledMessage(sessionId, messageId, sequenceId, type, submitDate, scheduleEnqueueDate);
             var insertOperation = TableOperation.Insert(entity);
             await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
@@ -52,7 +52,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
 
         public async Task Delete(string sessionId, string messageId)
         {
-            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
             
             var query = new TableQuery<ScheduledMessage>()
                 .Where(TableQuery
@@ -62,7 +62,20 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                         TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, messageId)
                     ));
 
-            var sagaStateRow = table.ExecuteQuery(query).FirstOrDefault();
+            
+            var results = new List<ScheduledMessage>();
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                if (result.Results?.Count > 0)
+                {
+                    results.AddRange(result.Results);
+                }
+                continuationToken = result.ContinuationToken;
+            } while (continuationToken != null);
+
+            var sagaStateRow = results.FirstOrDefault();
             if (sagaStateRow == null) return;                        
             var deleteOperation = TableOperation.Delete(sagaStateRow);
             try
@@ -84,7 +97,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
 
         public async Task<HighIronRanch.Azure.ServiceBus.Contracts.ScheduledMessage> GetBySessionIdMessageId(string sessionId, string messageId)
         {
-            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);            
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);            
 
             var query = new TableQuery<ScheduledMessage>()
                 .Where(TableQuery
@@ -93,14 +106,26 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                         TableOperators.And,
                         TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, messageId)
                     )
-                );
+                );            
 
-            return ConvertToDomainEvent(table.ExecuteQuery(query)).FirstOrDefault();       
+            var results = new List<ScheduledMessage>();
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                if (result.Results?.Count > 0)
+                {
+                    results.AddRange(result.Results);
+                }
+                continuationToken = result.ContinuationToken;
+            } while (continuationToken != null);
+
+            return ConvertToDomainEvent(results).FirstOrDefault();       
         }
 
         public async Task<List<HighIronRanch.Azure.ServiceBus.Contracts.ScheduledMessage>> GetBySessionIdType(string sessionId, string type)
         {
-            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);            
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);            
 
             var query = new TableQuery<ScheduledMessage>()
                 .Where(TableQuery
@@ -111,12 +136,24 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                     )
                 );
 
-            return ConvertToDomainEvent(table.ExecuteQuery(query));            
+            var results = new List<ScheduledMessage>();
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                if (result.Results?.Count > 0)
+                {
+                    results.AddRange(result.Results);
+                }
+                continuationToken = result.ContinuationToken;
+            } while (continuationToken != null);
+
+            return ConvertToDomainEvent(results);            
         }
 
         public async Task<List<HighIronRanch.Azure.ServiceBus.Contracts.ScheduledMessage>> GetBySessionIdTypeScheduledDateRange(string sessionId, string type, DateTime startDate, DateTime endDate)
         {
-            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
 
             var keyFilter = TableQuery
                 .CombineFilters(
@@ -127,8 +164,19 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             var query = new TableQuery<ScheduledMessage>()
                 .Where(keyFilter);
 
-            var all = table.ExecuteQuery(query).ToList();
-
+            
+            var all = new List<ScheduledMessage>();
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                if (result.Results?.Count > 0)
+                {
+                    all.AddRange(result.Results);
+                }
+                continuationToken = result.ContinuationToken;
+            } while (continuationToken != null);
+            
             // now that we have every message for a type, take this opportunity to clear out any old messages
             await CleanupExpiredMessages(all);
 

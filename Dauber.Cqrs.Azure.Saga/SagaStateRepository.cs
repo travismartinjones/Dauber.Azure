@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dauber.Cqrs.Contracts;
@@ -42,12 +43,24 @@ namespace Dauber.Cqrs.Azure.Saga
 
         public async Task<Contracts.SagaState> Read(Guid correlationId)
         {
-            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
 
             var query = new TableQuery<SagaState>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, correlationId.ToString()));
 
-            var sagaStateRow = table.ExecuteQuery(query).FirstOrDefault();
+            var results = new List<SagaState>();
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                if (result.Results?.Count > 0)
+                {
+                    results.AddRange(result.Results);
+                }
+                continuationToken = result.ContinuationToken;
+            } while (continuationToken != null);
+
+            var sagaStateRow = results.FirstOrDefault();
             if (sagaStateRow == null) return null;
             var stateType = GetTypeFromFullName(sagaStateRow.RowKey);
             return new Contracts.SagaState
@@ -59,7 +72,7 @@ namespace Dauber.Cqrs.Azure.Saga
 
         public async Task Create(Guid correlationId, object state)
         {
-            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
             var entity = new SagaState(correlationId, state);
             var insertOperation = TableOperation.Insert(entity);
             await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
@@ -67,7 +80,7 @@ namespace Dauber.Cqrs.Azure.Saga
 
         public async Task Update(Guid correlationId, object state)
         {
-            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
             var entity = new SagaState(correlationId, state);
             var insertOperation = TableOperation.InsertOrReplace(entity);
             await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
@@ -75,12 +88,24 @@ namespace Dauber.Cqrs.Azure.Saga
 
         public async Task Delete(Guid correlationId)
         {
-            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
             
             var query = new TableQuery<SagaState>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, correlationId.ToString()));
 
-            var sagaStateRow = table.ExecuteQuery(query).FirstOrDefault();
+            var results = new List<SagaState>();
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                if (result.Results?.Count > 0)
+                {
+                    results.AddRange(result.Results);
+                }
+                continuationToken = result.ContinuationToken;
+            } while (continuationToken != null);
+
+            var sagaStateRow = results.FirstOrDefault();
             if (sagaStateRow == null) return;                        
             var insertOperation = TableOperation.Delete(sagaStateRow);
             await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
