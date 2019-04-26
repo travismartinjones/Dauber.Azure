@@ -62,7 +62,7 @@ namespace Dauber.Cqrs.Azure.Saga
             var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
             var entity = new SagaState(correlationId, state);
             var insertOperation = TableOperation.Insert(entity);
-            await table.ExecuteAsync(insertOperation);
+            await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
         }
 
         public async Task Update(Guid correlationId, object state)
@@ -70,7 +70,7 @@ namespace Dauber.Cqrs.Azure.Saga
             var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
             var entity = new SagaState(correlationId, state);
             var insertOperation = TableOperation.InsertOrReplace(entity);
-            await table.ExecuteAsync(insertOperation);
+            await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
         }
 
         public async Task Delete(Guid correlationId)
@@ -83,7 +83,7 @@ namespace Dauber.Cqrs.Azure.Saga
             var sagaStateRow = table.ExecuteQuery(query).FirstOrDefault();
             if (sagaStateRow == null) return;                        
             var insertOperation = TableOperation.Delete(sagaStateRow);
-            await table.ExecuteAsync(insertOperation);
+            await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
         }
 
         private Type GetTypeFromFullName(string typeName)

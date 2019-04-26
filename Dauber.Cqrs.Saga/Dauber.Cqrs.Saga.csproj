@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dauber.Cqrs.Saga</RootNamespace>
-    <AssemblyName>Dauber.Cqrs.Saga</AssemblyName>
+    <AssemblyName>Event</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,8 +39,8 @@
     <Reference Include="Dauber.Cqrs.Contracts, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dauber.Cqrs.Contracts.1.0.6\lib\net461\Dauber.Cqrs.Contracts.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.6\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.8.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.8.7\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>

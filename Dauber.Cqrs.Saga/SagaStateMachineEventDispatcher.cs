@@ -44,7 +44,7 @@ namespace Dauber.Cqrs.Saga
                 throw new Exception($"No valid state machine {stateMachineType.Name} for state {stateType.Name}.");
             {
                 var result = new StateMachineProcessingResults();
-                await ((Task) methodInfo?.Invoke(stateMachine, new[] {evt.CorrelationId, evt, state, result}));
+                await ((Task) methodInfo?.Invoke(stateMachine, new[] {evt.CorrelationId, evt, state, result})).ConfigureAwait(false);
                 return result;
             }            
         }

@@ -35,9 +35,9 @@ namespace Dauber.Azure.DocumentDb
                 
             var client = new DocumentClient(new Uri(settings.DocumentDbRepositoryEndpointUrl), settings.DocumentDbRepositoryAuthKey)
                 .AsReliable(new FixedInterval(10, TimeSpan.FromSeconds(1)));
-            await client.OpenAsync();
+            await client.OpenAsync().ConfigureAwait(false);
 
-            await SpinUpDatabaseAsync(client, settings.DocumentDbRepositoryDatabaseId);
+            await SpinUpDatabaseAsync(client, settings.DocumentDbRepositoryDatabaseId).ConfigureAwait(false);
 
             _clients[key] = client;
             return client;
@@ -54,7 +54,7 @@ namespace Dauber.Azure.DocumentDb
             {
                 _logger.Debug(Common.LoggerContext, "Create DocumentDb database for {0}", databaseId);
 
-                await client.CreateDatabaseAsync(new Database { Id = databaseId });
+                await client.CreateDatabaseAsync(new Database { Id = databaseId }).ConfigureAwait(false);
             }
         }
     }

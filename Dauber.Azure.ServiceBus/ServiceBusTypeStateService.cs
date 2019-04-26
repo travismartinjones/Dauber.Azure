@@ -42,12 +42,12 @@ namespace Dauber.Azure.ServiceBus
         public async Task<bool> GetIsQueueCreated(string name)
         {
             var collection = _db.GetCollection<Queue>("queues");
-            return collection.Find(x => x.Name == name).Any();
+            return collection.FindOne(x => x.Name == name) != null;
         }
 
         public async Task OnQueueCreated(string name)
         {
-            if (await GetIsQueueCreated(name)) return;
+            if (await GetIsQueueCreated(name).ConfigureAwait(false)) return;
             var collection = _db.GetCollection<Queue>("queues");            
             collection.Insert(new Queue { Name = name });
         }
@@ -55,12 +55,12 @@ namespace Dauber.Azure.ServiceBus
         public async Task<bool> GetIsTopicCreated(string name)
         {
             var collection = _db.GetCollection<Topic>("topics");
-            return collection.Find(x => x.Name == name).Any();
+            return collection.FindOne(x => x.Name == name) != null;
         }
 
         public async Task OnTopicCreated(string name)
         {
-            if (await GetIsTopicCreated(name)) return;
+            if (await GetIsTopicCreated(name).ConfigureAwait(false)) return;
             var collection = _db.GetCollection<Topic>("topics");
             collection.Insert(new Topic { Name = name });
         }

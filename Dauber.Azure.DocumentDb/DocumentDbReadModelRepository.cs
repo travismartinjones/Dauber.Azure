@@ -35,7 +35,7 @@ namespace Dauber.Azure.DocumentDb
         protected virtual async Task CreateCollectionIfNecessaryAsync<T>()
         {
             var databaseLink = UriFactory.CreateDatabaseUri(Settings.DocumentDbRepositoryDatabaseId);
-            var client = await ClientFactory.GetClientAsync(Settings);
+            var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
             var collection = client.CreateDocumentCollectionQuery(databaseLink)
                                 .Where(c => c.Id == Settings.DocumentDbRepositoryCollectionId)
                                 .AsEnumerable()
@@ -52,7 +52,7 @@ namespace Dauber.Azure.DocumentDb
             if (CollectionUri != null) return CollectionUri;
 
             if(Settings.IsCollectionCretedIfMissing)
-                await CreateCollectionIfNecessaryAsync<T>();
+                await CreateCollectionIfNecessaryAsync<T>().ConfigureAwait(false);
 
             CollectionUri = UriFactory.CreateDocumentCollectionUri(Settings.DocumentDbRepositoryDatabaseId, Settings.DocumentDbRepositoryCollectionId);
             return CollectionUri;
@@ -65,8 +65,8 @@ namespace Dauber.Azure.DocumentDb
 
         public async Task<IQueryable<T>> GetAsync<T>() where T : IViewModel, new()
         {
-            var collectionLink = await GetCollectionLinkAsync<T>();
-            var client = await ClientFactory.GetClientAsync(Settings);
+            var collectionLink = await GetCollectionLinkAsync<T>().ConfigureAwait(false);
+            var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
             var queryable = client.CreateDocumentQuery<T>(collectionLink, new FeedOptions { EnableCrossPartitionQuery = true, MaxDegreeOfParallelism = 10, MaxBufferedItemCount = 100});
 
             // filter the entity by type due to multiple document types sharing the same collection
@@ -87,14 +87,14 @@ namespace Dauber.Azure.DocumentDb
 
         public async Task<T> GetByStoredProcedureAsync<T>(string storedProcedureName, params dynamic[] arguments) where T : IViewModel, new()
         {
-            var client = await ClientFactory.GetClientAsync(Settings);
-            return await client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(Settings.DocumentDbRepositoryDatabaseId, Settings.DocumentDbRepositoryCollectionId, storedProcedureName), arguments);
+            var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
+            return await client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(Settings.DocumentDbRepositoryDatabaseId, Settings.DocumentDbRepositoryCollectionId, storedProcedureName), arguments).ConfigureAwait(false);
         }
 
         public async Task<IQueryable<TReturnType>> GetAsync<TEntityType, TReturnType>(string query) where TEntityType : IViewModel, new() where TReturnType : new()
         {
-            var collectionLink = await GetCollectionLinkAsync<TEntityType>();
-            var client = await ClientFactory.GetClientAsync(Settings);
+            var collectionLink = await GetCollectionLinkAsync<TEntityType>().ConfigureAwait(false);
+            var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
             return client.CreateDocumentQuery<TReturnType>(collectionLink, query);
         }
 
@@ -108,7 +108,7 @@ namespace Dauber.Azure.DocumentDb
 
         public async Task<IQueryable<T>> GetAsync<T>(string query) where T : IViewModel, new()
         {
-            return await GetAsync<T, T>(query);
+            return await GetAsync<T, T>(query).ConfigureAwait(false);
         }
 
         public IQueryable<T> Get<T>(string query) where T : IViewModel, new()
@@ -123,8 +123,8 @@ namespace Dauber.Azure.DocumentDb
             try
             {
                 var documentLink = GetDocumentLink<T>(id.ToString());
-                var client = await ClientFactory.GetClientAsync(Settings);
-                var response = await client.ReadDocumentAsync(documentLink);
+                var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
+                var response = await client.ReadDocumentAsync(documentLink).ConfigureAwait(false);
                 var viewModel = JsonConvert.DeserializeObject<T>(response.Resource.ToString());                
                 return viewModel;
             }

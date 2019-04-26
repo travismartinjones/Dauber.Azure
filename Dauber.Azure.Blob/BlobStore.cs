@@ -28,9 +28,9 @@ namespace Dauber.Azure.Blob
         {
             var container = isPrivate ? PrivateContainer : PublicContainer;
             var blockBlob = container.GetBlockBlobReference(blobName);            
-            await blockBlob.UploadFromByteArrayAsync(data, 0, data.Length);
+            await blockBlob.UploadFromByteArrayAsync(data, 0, data.Length).ConfigureAwait(false);
             blockBlob.Properties.ContentType = contentType;
-            await blockBlob.SetPropertiesAsync();
+            await blockBlob.SetPropertiesAsync().ConfigureAwait(false);
 
             return new BlobCreationResponse
             {
@@ -41,7 +41,7 @@ namespace Dauber.Azure.Blob
         public async Task DeleteAsync(string blobUrl)
         {
             var blockBlob = GetBlockBlob(blobUrl);
-            await blockBlob.DeleteAsync();
+            await blockBlob.DeleteAsync().ConfigureAwait(false);
         }
 
         public async Task<Contracts.Blob> GetAsync(string blobUrl)
@@ -50,7 +50,7 @@ namespace Dauber.Azure.Blob
 
             using (var memoryStream = new MemoryStream())
             {
-                await blockBlob.DownloadToStreamAsync(memoryStream);
+                await blockBlob.DownloadToStreamAsync(memoryStream).ConfigureAwait(false);
                 return new Contracts.Blob
                 {
                     ContentType = blockBlob.Properties.ContentType,

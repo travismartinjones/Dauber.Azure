@@ -42,8 +42,8 @@
     <Reference Include="Dauber.Cqrs.Saga, Version=1.0.4.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dauber.Cqrs.Saga.1.0.4.2\lib\net461\Dauber.Cqrs.Saga.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.6\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.8.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.8.7\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="HighIronRanch.Azure.TableStorage, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HighIronRanch.Azure.TableStorage.2.0.2\lib\net45\HighIronRanch.Azure.TableStorage.dll</HintPath>

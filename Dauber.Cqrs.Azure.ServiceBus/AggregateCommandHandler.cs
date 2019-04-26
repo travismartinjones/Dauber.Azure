@@ -36,7 +36,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             try
             {
                 AddTelemetryProperties(message);
-                await ProcessAsync(message, actions);
+                await ProcessAsync(message, actions).ConfigureAwait(false);
             }
             catch (AggregateException exceptions)
             {
@@ -50,7 +50,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                     EventDate = _dateTime.UtcNow,
                     Errors = exceptions.InnerExceptions.Select(x => x.Message).ToList(),
                     UserId = userId
-                });
+                }).ConfigureAwait(false);
 
                 if (exceptions.InnerExceptions.Any(IsExceptionToBeRethrown))
                 {
@@ -69,7 +69,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                     EventDate = _dateTime.UtcNow,
                     Errors = new List<string> { ex.Message },
                     UserId = userId
-                });
+                }).ConfigureAwait(false);
 
                 if (IsExceptionToBeRethrown(ex))
                 {

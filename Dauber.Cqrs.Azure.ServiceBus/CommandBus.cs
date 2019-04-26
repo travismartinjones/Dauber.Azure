@@ -43,7 +43,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             if(handler == null)
                 throw new NotSupportedException($"Command {typeof(Command)} is not implemented in this application boundary. External service handlers is not supported. Use SendAsync<T> instead.");
 
-            await handler.HandleAsync(command, new ExecuteCommandActions());
+            await handler.HandleAsync(command, new ExecuteCommandActions()).ConfigureAwait(false);
             return 1;
         }        
 
@@ -56,7 +56,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         {            
             ValidateCommand(command);
 
-            await _serviceBus.SendAsync((HighIronRanch.Azure.ServiceBus.Contracts.ICommand)command, enqueueTime);
+            await _serviceBus.SendAsync((HighIronRanch.Azure.ServiceBus.Contracts.ICommand)command, enqueueTime).ConfigureAwait(false);
         }
 
         private static void ValidateCommand<TCommand>(TCommand command) where TCommand : ICommand

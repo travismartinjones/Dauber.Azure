@@ -31,10 +31,10 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             try
             {
                 AddTelemetryProperties(evt);
-                await ProcessAsync(evt);
+                await ProcessAsync(evt).ConfigureAwait(false);
                 
                 if (evt is ICorrelationEvent correlationEvent)
-                    await _correlationEventHandler.Handle(correlationEvent);
+                    await _correlationEventHandler.Handle(correlationEvent).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -44,12 +44,17 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         }
 
         private void AddTelemetryProperties(T evt)
-        {            
-            if(typeof(T).IsSubclassOf(typeof(DomainEvent)))
-                _serviceBusTelemetryProperties.Add("id", ((DomainEvent)(object)evt).Id.ToString());
+        {
+            if (_serviceBusTelemetryProperties == null) return;
+
+            if (typeof(T).IsSubclassOf(typeof(DomainEvent)))
+            {
+                var domainEvent = (DomainEvent) (object) evt;
+                _serviceBusTelemetryProperties.Add("id", domainEvent?.Id.ToString() ?? "Unknown");
+            }
 
             _serviceBusTelemetryProperties.Add("event", typeof(T).Name);
-            _serviceBusTelemetryProperties.Add("message", evt.ToJson());
+            _serviceBusTelemetryProperties.Add("message", evt?.ToJson() ?? "{}");
         }
 
         public abstract Task ProcessAsync(T evt);
