@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using HighIronRanch.Azure.ServiceBus;
 
 namespace Cqrs.Azure.ServiceBus
@@ -12,17 +13,16 @@ namespace Cqrs.Azure.ServiceBus
             _serviceBus = serviceBus;
         }
 
-        public void PublishEvent(SimpleCqrs.Eventing.DomainEvent domainEvent)
+        public async Task PublishEvent(SimpleCqrs.Eventing.DomainEvent domainEvent)
         {
-            var task = _serviceBus.PublishAsync((HighIronRanch.Azure.ServiceBus.Contracts.IEvent)domainEvent);
-            task.Wait();
+            await _serviceBus.PublishAsync((HighIronRanch.Azure.ServiceBus.Contracts.IEvent)domainEvent);
         }
 
-        public void PublishEvents(IEnumerable<SimpleCqrs.Eventing.DomainEvent> domainEvents)
+        public async Task PublishEvents(IEnumerable<SimpleCqrs.Eventing.DomainEvent> domainEvents)
         {
             foreach (var domainEvent in domainEvents)
             {
-                PublishEvent(domainEvent);
+                await PublishEvent(domainEvent);
             }
         }
     }
