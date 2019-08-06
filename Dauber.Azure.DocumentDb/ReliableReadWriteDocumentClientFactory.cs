@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Dauber.Core;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Client.TransientFaultHandling;
-using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
 namespace Dauber.Azure.DocumentDb
 {
@@ -18,14 +16,14 @@ namespace Dauber.Azure.DocumentDb
     {
         private readonly ILogger _logger;
 
-        private readonly ConcurrentDictionary<string, IReliableReadWriteDocumentClient> _clients = new ConcurrentDictionary<string, IReliableReadWriteDocumentClient>();
+        private readonly ConcurrentDictionary<string, DocumentClient> _clients = new ConcurrentDictionary<string, DocumentClient>();
 
         public ReliableReadWriteDocumentClientFactory(ILogger logger)
         {
             _logger = logger;
         }
 
-        public async Task<IReliableReadWriteDocumentClient> GetClientAsync(IDocumentDbSettings settings)
+        public async Task<DocumentClient> GetClientAsync(IDocumentDbSettings settings)
         {
             var key = settings.DocumentDbRepositoryEndpointUrl + settings.DocumentDbRepositoryDatabaseId;
 
@@ -33,8 +31,7 @@ namespace Dauber.Azure.DocumentDb
 
             _logger.Debug(Common.LoggerContext, "Creating DocumentDb Client for {0}", settings.DocumentDbRepositoryEndpointUrl);
                 
-            var client = new DocumentClient(new Uri(settings.DocumentDbRepositoryEndpointUrl), settings.DocumentDbRepositoryAuthKey)
-                .AsReliable(new FixedInterval(10, TimeSpan.FromSeconds(1)));
+            var client = new DocumentClient(new Uri(settings.DocumentDbRepositoryEndpointUrl), settings.DocumentDbRepositoryAuthKey);            
             await client.OpenAsync().ConfigureAwait(false);
 
             await SpinUpDatabaseAsync(client, settings.DocumentDbRepositoryDatabaseId).ConfigureAwait(false);
@@ -43,7 +40,7 @@ namespace Dauber.Azure.DocumentDb
             return client;
         }
 
-        private async Task SpinUpDatabaseAsync(IReliableReadWriteDocumentClient client, string databaseId)
+        private async Task SpinUpDatabaseAsync(DocumentClient client, string databaseId)
         {
             var x = client.CreateDatabaseQuery()
                 .Where(d => d.Id == databaseId)

@@ -95,7 +95,7 @@ namespace Dauber.Azure.DocumentDb
         {
             var collectionLink = await GetCollectionLinkAsync<TEntityType>().ConfigureAwait(false);
             var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
-            return client.CreateDocumentQuery<TReturnType>(collectionLink, query);
+            return client.CreateDocumentQuery<TReturnType>(collectionLink, query, new FeedOptions { EnableCrossPartitionQuery = true, MaxDegreeOfParallelism = 10, MaxBufferedItemCount = 100});
         }
 
 
@@ -124,7 +124,10 @@ namespace Dauber.Azure.DocumentDb
             {
                 var documentLink = GetDocumentLink<T>(id.ToString());
                 var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
-                var response = await client.ReadDocumentAsync(documentLink).ConfigureAwait(false);
+                var response = await client.ReadDocumentAsync(documentLink, Settings.IsPartitioned ? new RequestOptions
+                {
+                    PartitionKey = new PartitionKey(id.ToString())
+                }: null).ConfigureAwait(false);
                 var viewModel = JsonConvert.DeserializeObject<T>(response.Resource.ToString());                
                 return viewModel;
             }

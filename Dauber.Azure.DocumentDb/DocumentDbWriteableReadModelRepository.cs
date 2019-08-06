@@ -8,7 +8,6 @@ using Dauber.Core;
 using Dauber.Core.Contracts;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Client.TransientFaultHandling;
 using Newtonsoft.Json;
 using static System.String;
 
@@ -91,7 +90,7 @@ namespace Dauber.Azure.DocumentDb
         {
             var documentLink = GetDocumentLink<T>(item.Id.ToString());
             var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
-            await client.DeleteDocumentAsync(documentLink).ConfigureAwait(false);
+            await client.DeleteDocumentAsync(documentLink, Settings.IsPartitioned ? new RequestOptions { PartitionKey = Settings.IsPartitioned ? new PartitionKey(item.Id.ToString()) : null} : null).ConfigureAwait(false);
         }
 
         public void Insert<T>(T item) where T : IViewModel
@@ -124,10 +123,10 @@ namespace Dauber.Azure.DocumentDb
             }
         }
 
-        protected async Task InsertAsync<T>(IReliableReadWriteDocumentClient client, Uri collectionLink, T item) where T : IViewModel
+        protected async Task InsertAsync<T>(DocumentClient client, Uri collectionLink, T item) where T : IViewModel
         {
             item.DocType = typeof(T).Name;
-            await client.CreateDocumentAsync(collectionLink, item).ConfigureAwait(false);
+            await client.CreateDocumentAsync(collectionLink, item, Settings.IsPartitioned ? new RequestOptions { PartitionKey = Settings.IsPartitioned ? new PartitionKey(item.Id.ToString()) : null} : null).ConfigureAwait(false);
         }
 
         public void Update<T>(T item) where T : IViewModel
@@ -145,7 +144,7 @@ namespace Dauber.Azure.DocumentDb
             var documentLink = GetDocumentLink<T>(item.Id.ToString());
             var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
                         
-            await client.ReplaceDocumentAsync(documentLink, item, GetOptimisticConcurrency(item.ETag)).ConfigureAwait(false);           
+            await client.ReplaceDocumentAsync(documentLink, item, GetOptimisticConcurrency(item.Id, item.ETag)).ConfigureAwait(false);           
         }
 
         public async Task DeleteDatabaseAsync()
@@ -156,10 +155,11 @@ namespace Dauber.Azure.DocumentDb
             await client.DeleteDatabaseAsync(UriFactory.CreateDatabaseUri(Settings.DocumentDbRepositoryDatabaseId)).ConfigureAwait(false);
         }
         
-        private RequestOptions GetOptimisticConcurrency(string eTag)
+        private RequestOptions GetOptimisticConcurrency(Guid id, string eTag)
         {
             return new RequestOptions
             {
+                PartitionKey = Settings.IsPartitioned ? new PartitionKey(id.ToString()) : null,
                 AccessCondition = new AccessCondition
                 {
                     Condition = eTag,
@@ -198,10 +198,10 @@ namespace Dauber.Azure.DocumentDb
             }
         }
 
-        protected async Task UpsertAsync<T>(IReliableReadWriteDocumentClient client, Uri collectionLink, T item) where T : IViewModel
+        protected async Task UpsertAsync<T>(DocumentClient client, Uri collectionLink, T item) where T : IViewModel
         {
             item.DocType = typeof(T).Name;
-            await client.UpsertDocumentAsync(collectionLink, item).ConfigureAwait(false);
+            await client.UpsertDocumentAsync(collectionLink, item, new RequestOptions { PartitionKey = Settings.IsPartitioned ? new PartitionKey(item.Id.ToString()) : null}).ConfigureAwait(false);
         }
     }
 }

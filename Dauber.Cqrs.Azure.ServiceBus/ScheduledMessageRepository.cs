@@ -27,6 +27,8 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             public string Type { get; set; }
             public DateTime SubmitDate { get; set; }
             public DateTime ScheduleEnqueueDate { get; set; }
+            public bool IsCancelled { get; set; }
+
             protected override int AdditionalPropertySizes => 0;
 
             public ScheduledMessage() { }
@@ -47,6 +49,26 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
             var entity = new ScheduledMessage(sessionId, messageId, sequenceId, type, submitDate, scheduleEnqueueDate);
             var insertOperation = TableOperation.Insert(entity);
+            await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
+        }
+
+        public async Task Cancel(string sessionId, string messageId)
+        {
+            var table = _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);            
+
+            var query = new TableQuery<ScheduledMessage>()
+                .Where(TableQuery
+                    .CombineFilters(
+                        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, sessionId),
+                        TableOperators.And,
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, messageId)
+                    )
+                );
+
+            var entity = table.ExecuteQuery(query).FirstOrDefault();
+            if (entity == null) return;            
+            entity.IsCancelled = true;
+            var insertOperation = TableOperation.InsertOrReplace(entity);
             await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
         }
 

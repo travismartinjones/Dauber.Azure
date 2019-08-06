@@ -45,11 +45,11 @@
     <Reference Include="FluentValidation, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.7.1.0\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=2.2.4.12, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.2.2.4.12\lib\net461\HighIronRanch.Azure.ServiceBus.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.2.3.2\lib\net461\HighIronRanch.Azure.ServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.8.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.8.7\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.9\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="HighIronRanch.Azure.TableStorage, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HighIronRanch.Azure.TableStorage.2.0.2\lib\net45\HighIronRanch.Azure.TableStorage.dll</HintPath>
@@ -102,8 +102,8 @@
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleCqrs, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.SimpleCqrs.2.0.0\lib\net452\SimpleCqrs.dll</HintPath>
+    <Reference Include="SimpleCqrs, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleCqrs.1.0.7\lib\netstandard2.0\SimpleCqrs.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.5.1\lib\net45\StructureMap.dll</HintPath>

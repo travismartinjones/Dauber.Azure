@@ -50,7 +50,7 @@ namespace Dauber.Azure.Blob
 
             using (var memoryStream = new MemoryStream())
             {
-                await blockBlob.DownloadToStreamAsync(memoryStream).ConfigureAwait(false);
+                await blockBlob.DownloadToStreamAsync(memoryStream, null, new BlobRequestOptions { DisableContentMD5Validation = true }, new OperationContext()).ConfigureAwait(false);
                 return new Contracts.Blob
                 {
                     ContentType = blockBlob.Properties.ContentType,
