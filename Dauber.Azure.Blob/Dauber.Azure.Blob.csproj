@@ -30,9 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dauber.Azure.Blob.Contracts, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dauber.Azure.Blob.Contracts.1.0.0\lib\net461\Dauber.Azure.Blob.Contracts.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Dauber.Azure.Blob.Contracts, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Azure.Blob.Contracts.1.0.2\lib\net461\Dauber.Azure.Blob.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.3.0.1\lib\net452\Microsoft.Azure.KeyVault.Core.dll</HintPath>

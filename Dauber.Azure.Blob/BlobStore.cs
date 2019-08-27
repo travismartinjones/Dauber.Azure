@@ -44,10 +44,19 @@ namespace Dauber.Azure.Blob
             await blockBlob.DeleteAsync().ConfigureAwait(false);
         }
 
+        public async Task<Contracts.Blob> GetAsync(string blobUrl, bool isPrivate)
+        {
+            var blockBlob = (isPrivate ? this.PrivateContainer : this.PublicContainer).GetBlockBlobReference(blobUrl);
+            return await GetAsync(blockBlob);
+        }
+
         public async Task<Contracts.Blob> GetAsync(string blobUrl)
         {
-            var blockBlob = GetBlockBlob(blobUrl);            
+            return await GetAsync(GetBlockBlob(blobUrl));
+        }
 
+        private async Task<Contracts.Blob> GetAsync(CloudBlockBlob blockBlob)
+        {
             using (var memoryStream = new MemoryStream())
             {
                 await blockBlob.DownloadToStreamAsync(memoryStream, null, new BlobRequestOptions { DisableContentMD5Validation = true }, new OperationContext()).ConfigureAwait(false);
