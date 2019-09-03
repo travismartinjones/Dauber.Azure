@@ -41,6 +41,17 @@ namespace Dauber.Azure.Blob
         public async Task DeleteAsync(string blobUrl)
         {
             var blockBlob = GetBlockBlob(blobUrl);
+            await DeleteAsync(blockBlob);
+        }
+
+        public async Task DeleteAsync(string blobUrl, bool isPrivate)
+        {
+            var blockBlob = (isPrivate ? this.PrivateContainer : this.PublicContainer).GetBlockBlobReference(blobUrl);
+            await DeleteAsync(blockBlob);
+        }
+
+        public async Task DeleteAsync(CloudBlockBlob blockBlob)
+        {
             await blockBlob.DeleteAsync().ConfigureAwait(false);
         }
 

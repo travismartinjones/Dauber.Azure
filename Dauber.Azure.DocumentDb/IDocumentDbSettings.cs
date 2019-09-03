@@ -1,6 +1,4 @@
-﻿using Microsoft.Azure.Documents.Linq;
-
-namespace Dauber.Azure.DocumentDb
+﻿namespace Dauber.Azure.DocumentDb
 {
     public interface IDocumentDbSettings
     {
@@ -9,6 +7,5 @@ namespace Dauber.Azure.DocumentDb
         string DocumentDbRepositoryDatabaseId { get; }
         string DocumentDbRepositoryCollectionId { get; }
         bool IsPartitioned { get; }
-        bool IsCollectionCretedIfMissing { get; }
     }
 }

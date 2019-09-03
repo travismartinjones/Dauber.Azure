@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dauber.Core;
 using Dauber.Core.Contracts;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
@@ -19,27 +20,6 @@ namespace Dauber.Azure.DocumentDb
             : base(settings, clientFactory, logger)
         {
 
-        }
-
-        /// <summary>
-        /// Verifies the collection exists and creates it if it does not.
-        /// Overrides base class implementation in order to add creation logic.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        protected override async Task CreateCollectionIfNecessaryAsync<T>()
-        {
-            var databaseLink = UriFactory.CreateDatabaseUri(Settings.DocumentDbRepositoryDatabaseId);
-            var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
-            var collection = client.CreateDocumentCollectionQuery(databaseLink)
-                                .Where(c => c.Id == Settings.DocumentDbRepositoryCollectionId)
-                                .AsEnumerable()
-                                .FirstOrDefault();
-            if (collection == null)
-            {
-                Logger.Information(Common.LoggerContext, "Creating collection {0}", typeof(T).Name);
-                await client.CreateDocumentCollectionAsync(databaseLink, new DocumentCollection() { Id = typeof(T).Name }).ConfigureAwait(false);
-            }
         }
 
         public void Delete<T>(T item) where T : IViewModel
@@ -84,13 +64,15 @@ namespace Dauber.Azure.DocumentDb
                throw new Exception($"The provided query is not filtering to DocType = '{typeof(T).Name}'");
 
             await client.ExecuteStoredProcedureAsync<T>(UriFactory.CreateStoredProcedureUri(Settings.DocumentDbRepositoryDatabaseId, Settings.DocumentDbRepositoryCollectionId, "bulkDelete"), query).ConfigureAwait(false);            
-        }
+        } 
 
         public async Task DeleteAsync<T>(T item) where T : IViewModel
-        {
-            var documentLink = GetDocumentLink<T>(item.Id.ToString());
+        {            
             var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
-            await client.DeleteDocumentAsync(documentLink, Settings.IsPartitioned ? new RequestOptions { PartitionKey = Settings.IsPartitioned ? new PartitionKey(item.Id.ToString()) : null} : null).ConfigureAwait(false);
+            await client.DeleteItemAsync<T>(item.Id.ToString(), new PartitionKey(item.Id.ToString()), new ItemRequestOptions
+            {
+                IfMatchEtag = item.ETag
+            }).ConfigureAwait(false);
         }
 
         public void Insert<T>(T item) where T : IViewModel
@@ -115,18 +97,17 @@ namespace Dauber.Azure.DocumentDb
 
         public async Task InsertAsync<T>(IEnumerable<T> items) where T : IViewModel
         {
-            var collectionLink = await GetCollectionLinkAsync<T>().ConfigureAwait(false);
             var client = await ClientFactory.GetClientAsync(Settings).ConfigureAwait(false);
             foreach (var item in items)
             {
-                await InsertAsync(client, collectionLink, item).ConfigureAwait(false);
+                await client.UpsertItemAsync(item, Settings.IsPartitioned ? new PartitionKey(item.Id.ToString()) : (PartitionKey?) null);
             }
         }
 
-        protected async Task InsertAsync<T>(DocumentClient client, Uri collectionLink, T item) where T : IViewModel
+        protected async Task InsertAsync<T>(Container client, Uri collectionLink, T item) where T : IViewModel
         {
             item.DocType = typeof(T).Name;
-            await client.CreateDocumentAsync(collectionLink, item, Settings.IsPartitioned ? new RequestOptions { PartitionKey = Settings.IsPartitioned ? new PartitionKey(item.Id.ToString()) : null} : null).ConfigureAwait(false);
+            await client.UpsertItemAsync(item, Settings.IsPartitioned ? new PartitionKey(item.Id.ToString()) : (PartitionKey?) null).ConfigureAwait(false);
         }
 
         public void Update<T>(T item) where T : IViewModel

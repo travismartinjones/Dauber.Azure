@@ -7,10 +7,11 @@ using HighIronRanch.Azure.ServiceBus;
 using FluentValidation;
 using FluentValidation.Results;
 using HighIronRanch.Azure.ServiceBus.Contracts;
+using Microsoft.ServiceBus.Messaging;
 using ICommand = SimpleCqrs.Commanding.ICommand;
 
 namespace Dauber.Cqrs.Azure.ServiceBus
-{    
+{
     public class ExecuteCommandActions : ICommandActions
     {
         public async Task RenewLockAsync()

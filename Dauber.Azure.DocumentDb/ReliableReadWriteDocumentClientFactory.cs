@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dauber.Core;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 
@@ -16,43 +17,27 @@ namespace Dauber.Azure.DocumentDb
     {
         private readonly ILogger _logger;
 
-        private readonly ConcurrentDictionary<string, DocumentClient> _clients = new ConcurrentDictionary<string, DocumentClient>();
+        private readonly ConcurrentDictionary<string, Container> _containers = new ConcurrentDictionary<string, Container>();
 
         public ReliableReadWriteDocumentClientFactory(ILogger logger)
         {
             _logger = logger;
         }
 
-        public async Task<DocumentClient> GetClientAsync(IDocumentDbSettings settings)
+        public async Task<Container> GetClientAsync(IDocumentDbSettings settings)
         {
             var key = settings.DocumentDbRepositoryEndpointUrl + settings.DocumentDbRepositoryDatabaseId;
 
-            if (_clients.ContainsKey(key)) return _clients[key];
+            if (_containers.ContainsKey(key)) return _containers[key];
 
             _logger.Debug(Common.LoggerContext, "Creating DocumentDb Client for {0}", settings.DocumentDbRepositoryEndpointUrl);
                 
-            var client = new DocumentClient(new Uri(settings.DocumentDbRepositoryEndpointUrl), settings.DocumentDbRepositoryAuthKey);            
-            await client.OpenAsync().ConfigureAwait(false);
+            var client = new CosmosClient(settings.DocumentDbRepositoryEndpointUrl, settings.DocumentDbRepositoryAuthKey);
+            var databaseResponse = await client.CreateDatabaseIfNotExistsAsync(settings.DocumentDbRepositoryDatabaseId);
+            var containerResponse = await databaseResponse.Database.CreateContainerIfNotExistsAsync(settings.DocumentDbRepositoryCollectionId, "/id", 400);
 
-            await SpinUpDatabaseAsync(client, settings.DocumentDbRepositoryDatabaseId).ConfigureAwait(false);
-
-            _clients[key] = client;
-            return client;
-        }
-
-        private async Task SpinUpDatabaseAsync(DocumentClient client, string databaseId)
-        {
-            var x = client.CreateDatabaseQuery()
-                .Where(d => d.Id == databaseId)
-                .AsEnumerable()
-                .FirstOrDefault();
-
-            if (x == null)
-            {
-                _logger.Debug(Common.LoggerContext, "Create DocumentDb database for {0}", databaseId);
-
-                await client.CreateDatabaseAsync(new Database { Id = databaseId }).ConfigureAwait(false);
-            }
-        }
+            _containers[key] = containerResponse.Container;
+            return _containers[key];
+        }        
     }
 }
