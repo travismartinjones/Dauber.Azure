@@ -43,11 +43,11 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             
             lock(idTrack)
             {
-                idTrack.Start = queuedDate;
-            }   
+                idTrack.Start = now;
+            }
 
             status.AverageQueuedSeconds.Value = (status.AverageQueuedSeconds.Value * status.AverageQueuedSeconds.Count + (now - queuedDate).TotalSeconds)/(status.AverageQueuedSeconds.Count+1.0);
-            
+            status.AverageQueuedSeconds.Count++;
             
             var seconds = (int)(now - now.Date).TotalSeconds;
             status.MessagesPerSecond.AddOrUpdate(seconds, i => 1, (i, value) => value+1);
@@ -108,6 +108,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             }            
 
             status.AverageDurationSeconds.Value = (status.AverageDurationSeconds.Value * status.AverageDurationSeconds.Count + (idTrack.End.Value - idTrack.Start).TotalSeconds)/(status.AverageDurationSeconds.Count+1.0);
+            status.AverageDurationSeconds.Count++;
         }
 
         public void Abandon(string handlerType, string id, Exception ex)
@@ -142,6 +143,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             status.TimeoutsPerSecond.AddOrUpdate(seconds, i => 1, (i, value) => value+1);
 
             status.AverageDurationSeconds.Value = (status.AverageDurationSeconds.Value * status.AverageDurationSeconds.Count + (idTrack.End.Value - idTrack.Start).TotalSeconds)/(status.AverageDurationSeconds.Count+1.0);
+            status.AverageDurationSeconds.Count++;
         }
 
         public void Error(string handlerType, string id, Exception ex)
@@ -153,8 +155,8 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                 MessagesPerSecond = new ConcurrentDictionary<int, int>(),
                 ExceptionsPerSecond = new ConcurrentDictionary<int, int>(),
                 IdTracking = new ConcurrentDictionary<string, HandlerStatus.IdTrack>(),
-                LastException = new HandlerStatus.ExceptionCase(),
-                LastTimeout = new HandlerStatus.ExceptionCase(),
+                LastException = null,
+                LastTimeout = null,
                 TimeoutsPerSecond = new ConcurrentDictionary<int, int>()
             });
 
@@ -176,6 +178,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             status.ExceptionsPerSecond.AddOrUpdate(seconds, i => 1, (i, value) => value+1);
 
             status.AverageDurationSeconds.Value = (status.AverageDurationSeconds.Value * status.AverageDurationSeconds.Count + (idTrack.End.Value - idTrack.Start).TotalSeconds)/(status.AverageDurationSeconds.Count+1.0);
+            status.AverageDurationSeconds.Count++;
         }
 
         public void Clear()
@@ -194,7 +197,8 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             foreach (var key in keys)
             {
                 var status = _statuses.Statuses[key];                
-                sb.AppendLine($"{key},{status.AverageDurationSeconds.Value},{status.AverageQueuedSeconds.Value},{GetPerSecond(status.MessagesPerSecond)},{GetPerSecond(status.ExceptionsPerSecond)},{GetPerSecond(status.TimeoutsPerSecond)},{GetExceptionCaseMessage(status.LastException)},{GetExceptionCaseMessage(status.LastTimeout)},{string.Join(";",status.IdTracking.Select(x => $"{x.Key};{x.Value.RapidCount};{x.Value.Start:O}") )}");
+                Cleanup(status);
+                sb.AppendLine($"{key},{status.AverageDurationSeconds.Value},{status.AverageQueuedSeconds.Value},{GetPerSecond(status.MessagesPerSecond)},{GetPerSecond(status.ExceptionsPerSecond)},{GetPerSecond(status.TimeoutsPerSecond)},{GetExceptionCaseMessage(status.LastException)},{GetExceptionCaseMessage(status.LastTimeout)},{string.Join(";",status.IdTracking.Where(x => !x.Value.End.HasValue).Select(x => $"{x.Key};{x.Value.RapidCount};{x.Value.Start:O}") )}");
             }
 
             return sb.ToString();
