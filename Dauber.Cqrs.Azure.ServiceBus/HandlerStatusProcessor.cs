@@ -14,6 +14,29 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         string ToCsv();
     }
 
+    public class NullCsvHandlerStatusProcessor : IHandlerStatusProcessor
+    {
+        public void Begin(string handlerType, string id, DateTime eventDate)
+        {            
+        }
+
+        public void Complete(string handlerType, string id)
+        {
+        }
+
+        public void Abandon(string handlerType, string id, Exception ex)
+        {
+        }
+
+        public void Error(string handlerType, string id, Exception ex)
+        {
+        }
+
+        public void Clear()
+        {
+        }
+    }
+
     public class CsvHandlerStatusProcessor : ICsvHandlerStatusProcessor
     {
         private readonly IDateTime _dateTime;
@@ -34,8 +57,8 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                ExceptionsPerSecond = new ConcurrentDictionary<int, int>(),
                TimeoutsPerSecond = new ConcurrentDictionary<int, int>(),
                IdTracking = new ConcurrentDictionary<string, HandlerStatus.IdTrack>(),
-               LastException = new HandlerStatus.ExceptionCase(),
-               LastTimeout = new HandlerStatus.ExceptionCase()        
+               LastException = null,
+               LastTimeout = null
             });
 
             var now = _dateTime.UtcNow;
@@ -93,11 +116,11 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                 AverageDurationSeconds = new HandlerStatus.Average(),
                 AverageQueuedSeconds = new HandlerStatus.Average(),
                 MessagesPerSecond = new ConcurrentDictionary<int, int>(),
-                ExceptionsPerSecond = new ConcurrentDictionary<int, int>(),
+                ExceptionsPerSecond = new ConcurrentDictionary<int, int>(),                
+                TimeoutsPerSecond = new ConcurrentDictionary<int, int>(),
                 IdTracking = new ConcurrentDictionary<string, HandlerStatus.IdTrack>(),
-                LastException = new HandlerStatus.ExceptionCase(),
-                LastTimeout = new HandlerStatus.ExceptionCase(),
-                TimeoutsPerSecond = new ConcurrentDictionary<int, int>()
+                LastException = null,
+                LastTimeout =null
             });
 
             var idTrack = status.IdTracking.GetOrAdd(id, s => new HandlerStatus.IdTrack());
@@ -118,11 +141,11 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                 AverageDurationSeconds = new HandlerStatus.Average(),
                 AverageQueuedSeconds = new HandlerStatus.Average(),
                 MessagesPerSecond = new ConcurrentDictionary<int, int>(),
-                ExceptionsPerSecond = new ConcurrentDictionary<int, int>(),
+                ExceptionsPerSecond = new ConcurrentDictionary<int, int>(),                
+                TimeoutsPerSecond = new ConcurrentDictionary<int, int>(),
                 IdTracking = new ConcurrentDictionary<string, HandlerStatus.IdTrack>(),
-                LastException = new HandlerStatus.ExceptionCase(),
-                LastTimeout = new HandlerStatus.ExceptionCase(),
-                TimeoutsPerSecond = new ConcurrentDictionary<int, int>()
+                LastException = null,
+                LastTimeout = null
             });
 
             var now = _dateTime.UtcNow;
@@ -153,11 +176,11 @@ namespace Dauber.Cqrs.Azure.ServiceBus
                 AverageDurationSeconds = new HandlerStatus.Average(),
                 AverageQueuedSeconds = new HandlerStatus.Average(),
                 MessagesPerSecond = new ConcurrentDictionary<int, int>(),
-                ExceptionsPerSecond = new ConcurrentDictionary<int, int>(),
+                ExceptionsPerSecond = new ConcurrentDictionary<int, int>(),                
+                TimeoutsPerSecond = new ConcurrentDictionary<int, int>(),
                 IdTracking = new ConcurrentDictionary<string, HandlerStatus.IdTrack>(),
                 LastException = null,
-                LastTimeout = null,
-                TimeoutsPerSecond = new ConcurrentDictionary<int, int>()
+                LastTimeout = null
             });
 
             var now = _dateTime.UtcNow;
