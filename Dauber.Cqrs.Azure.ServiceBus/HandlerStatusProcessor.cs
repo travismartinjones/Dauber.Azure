@@ -66,27 +66,36 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             
             lock(idTrack)
             {
+                idTrack.RapidCount++;
                 idTrack.Start = now;
             }
 
-            status.AverageQueuedSeconds.Value = (status.AverageQueuedSeconds.Value * status.AverageQueuedSeconds.Count + (now - queuedDate).TotalSeconds)/(status.AverageQueuedSeconds.Count+1.0);
-            status.AverageQueuedSeconds.Count++;
-            
-            var seconds = (int)(now - now.Date).TotalSeconds;
-            status.MessagesPerSecond.AddOrUpdate(seconds, i => 1, (i, value) => value+1);
-            status.LastUpdated = now;
+            var seconds = (int) (now - now.Date).TotalSeconds;
+            status.MessagesPerSecond.AddOrUpdate(seconds, i => 1, (i, value) => value + 1);
 
-            Cleanup(status);            
+            lock (status)
+            {
+                status.AverageQueuedSeconds.Value = (status.AverageQueuedSeconds.Value * status.AverageQueuedSeconds.Count + (now - queuedDate).TotalSeconds) / (status.AverageQueuedSeconds.Count + 1);
+                status.AverageQueuedSeconds.Count++;                
+                status.LastUpdated = now;
+                status.TotalMessages++;
+            }
         }
 
         private void Cleanup(HandlerStatus.Status status)
         {
             foreach (var existingIdTrack in status.IdTracking.Keys)
             {
-                var exiting = status.IdTracking[existingIdTrack];
-                if (exiting?.End != null && (_dateTime.UtcNow - exiting.End.Value).TotalSeconds > 3)
+                status.IdTracking.TryGetValue(existingIdTrack, out var existing);
+                if (existing?.End != null && (_dateTime.UtcNow - existing.End.Value).TotalSeconds > 3)
                 {
-                    status.IdTracking.TryRemove(existingIdTrack, out exiting);
+                    // remove completed messages after 3 seconds
+                    status.IdTracking.TryRemove(existingIdTrack, out existing);
+                }
+                else if (existing != null && !existing.End.HasValue && (_dateTime.UtcNow - existing.Start).TotalMinutes > 5)
+                {
+                    // remove seemingly stuck messages after 5 minutes
+                    status.IdTracking.TryRemove(existingIdTrack, out existing);
                 }
             }
 
@@ -127,11 +136,26 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             var now = _dateTime.UtcNow;
             lock (idTrack)
             {
+                if (idTrack.Start == DateTime.MinValue)
+                    idTrack.Start = now;
                 idTrack.End = now;
-            }            
+            }
 
-            status.AverageDurationSeconds.Value = (status.AverageDurationSeconds.Value * status.AverageDurationSeconds.Count + (idTrack.End.Value - idTrack.Start).TotalSeconds)/(status.AverageDurationSeconds.Count+1.0);
-            status.AverageDurationSeconds.Count++;
+            var idTotalSeconds = (idTrack.End.Value - idTrack.Start).TotalSeconds;
+            if (status.SlowestSeconds < idTotalSeconds)
+            {
+                status.SlowestSeconds = idTotalSeconds;
+                status.SlowestId = id;
+                status.SlowestTime = now;
+            }
+
+            lock (status)
+            {
+                status.AverageDurationSeconds.Value = (status.AverageDurationSeconds.Value * status.AverageDurationSeconds.Count + idTotalSeconds)/(status.AverageDurationSeconds.Count+1);
+                status.AverageDurationSeconds.Count++;
+            }
+
+            Cleanup(status);
         }
 
         public void Abandon(string handlerType, string id, Exception ex)
@@ -152,6 +176,8 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             var idTrack = status.IdTracking.GetOrAdd(id, s => new HandlerStatus.IdTrack());
             lock (idTrack)
             {
+                if (idTrack.Start == DateTime.MinValue)
+                    idTrack.Start = now;
                 idTrack.End = now;
             }
 
@@ -165,8 +191,22 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             var seconds = (int)(now - now.Date).TotalSeconds;
             status.TimeoutsPerSecond.AddOrUpdate(seconds, i => 1, (i, value) => value+1);
 
-            status.AverageDurationSeconds.Value = (status.AverageDurationSeconds.Value * status.AverageDurationSeconds.Count + (idTrack.End.Value - idTrack.Start).TotalSeconds)/(status.AverageDurationSeconds.Count+1.0);
-            status.AverageDurationSeconds.Count++;
+            
+            var idTotalSeconds = (idTrack.End.Value - idTrack.Start).TotalSeconds;
+            if (status.SlowestSeconds < idTotalSeconds)
+            {
+                status.SlowestSeconds = idTotalSeconds;
+                status.SlowestId = id;
+                status.SlowestTime = now;
+            }
+
+            lock (status)
+            {
+                status.AverageDurationSeconds.Value = (status.AverageDurationSeconds.Value * status.AverageDurationSeconds.Count + idTotalSeconds)/(status.AverageDurationSeconds.Count+1);
+                status.AverageDurationSeconds.Count++;
+            }
+
+            Cleanup(status);
         }
 
         public void Error(string handlerType, string id, Exception ex)
@@ -187,6 +227,8 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             var idTrack = status.IdTracking.GetOrAdd(id, s => new HandlerStatus.IdTrack());
             lock (idTrack)
             {
+                if (idTrack.Start == DateTime.MinValue)
+                    idTrack.Start = now;
                 idTrack.End = now;
             }
 
@@ -199,9 +241,22 @@ namespace Dauber.Cqrs.Azure.ServiceBus
 
             var seconds = (int)(now - now.Date).TotalSeconds;
             status.ExceptionsPerSecond.AddOrUpdate(seconds, i => 1, (i, value) => value+1);
+            
+            var idTotalSeconds = (idTrack.End.Value - idTrack.Start).TotalSeconds;
+            if (status.SlowestSeconds < idTotalSeconds)
+            {
+                status.SlowestSeconds = idTotalSeconds;
+                status.SlowestId = id;
+                status.SlowestTime = now;
+            }
 
-            status.AverageDurationSeconds.Value = (status.AverageDurationSeconds.Value * status.AverageDurationSeconds.Count + (idTrack.End.Value - idTrack.Start).TotalSeconds)/(status.AverageDurationSeconds.Count+1.0);
-            status.AverageDurationSeconds.Count++;
+            lock (status)
+            {
+                status.AverageDurationSeconds.Value = (status.AverageDurationSeconds.Value * status.AverageDurationSeconds.Count + idTotalSeconds)/(status.AverageDurationSeconds.Count+1);
+                status.AverageDurationSeconds.Count++;
+            }
+
+            Cleanup(status);
         }
 
         public void Clear()
@@ -213,7 +268,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine("Type,AvgDuration,AvgQueued,MessagePerSec,ExceptionPerSec,TimeoutPerSec,LastException,LastTimeout,ActiveIds");
+            sb.AppendLine("Type,Count,CountStart,LastUpdate,AvgDuration,AvgQueued,MessagePerSec,ExceptionPerSec,TimeoutPerSec,LastException,LastTimeout,SlowestId,SlowestSeconds,SlowestDate,ActiveIds");            
 
             var keys = _statuses.Statuses.Keys;
 
@@ -221,7 +276,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             {
                 var status = _statuses.Statuses[key];                
                 Cleanup(status);
-                sb.AppendLine($"{key},{status.AverageDurationSeconds.Value},{status.AverageQueuedSeconds.Value},{GetPerSecond(status.MessagesPerSecond)},{GetPerSecond(status.ExceptionsPerSecond)},{GetPerSecond(status.TimeoutsPerSecond)},{GetExceptionCaseMessage(status.LastException)},{GetExceptionCaseMessage(status.LastTimeout)},{string.Join(";",status.IdTracking.Where(x => !x.Value.End.HasValue).Select(x => $"{x.Key};{x.Value.RapidCount};{x.Value.Start:O}") )}");
+                sb.AppendLine($"{key},{status.TotalMessages},{status.CreateDate:O},{status.LastUpdated:O},{status.AverageDurationSeconds.Value},{status.AverageQueuedSeconds.Value},{GetPerSecond(status.MessagesPerSecond)},{GetPerSecond(status.ExceptionsPerSecond)},{GetPerSecond(status.TimeoutsPerSecond)},{GetExceptionCaseMessage(status.LastException)},{GetExceptionCaseMessage(status.LastTimeout)},{status.SlowestId},{status.SlowestSeconds},{status.SlowestTime:O},{string.Join(",", status.IdTracking.Where(x => !x.Value.End.HasValue).Select(x => $"{x.Key} ({x.Value.RapidCount}) {x.Value.Start:O}".Replace("\n", "").Replace("\r", "")))}");                
             }
 
             return sb.ToString();
@@ -231,7 +286,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         {
             if (statusLastException == null) return "";
 
-            return $"{statusLastException.Date:O} - {statusLastException.Message} {statusLastException.Stack}";
+            return $"{statusLastException.Date:O} - {statusLastException.Message.Replace(",",".").Replace("\r","").Replace("\n","--")} {statusLastException.Stack.Replace(",",".").Replace("\r","").Replace("\n","--")}";
         }
 
         private double GetPerSecond(ConcurrentDictionary<int, int> entries)
