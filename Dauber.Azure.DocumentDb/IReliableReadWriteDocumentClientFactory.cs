@@ -6,6 +6,6 @@ namespace Dauber.Azure.DocumentDb
 {
     public interface IReliableReadWriteDocumentClientFactory
     {
-        Task<Container> GetClientAsync(IDocumentDbSettings settings);
+        Task<Container> GetContainerAsync(IDocumentDbSettings settings);
     }
 }

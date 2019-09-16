@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.Blob.Contracts
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{779EC665-8266-4608-B21C-F3C731F7F396}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.DocumentDb.Test", "Dauber.Azure.DocumentDb.Test\Dauber.Azure.DocumentDb.Test.csproj", "{FD357F65-041D-49EE-99E4-E693E2E74046}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.Contracts", "Dauber.Cqrs.Contracts\Dauber.Cqrs.Contracts.csproj", "{CD1BFE1C-89AE-482F-94C1-C9F75126FF84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.Azure.Saga", "Dauber.Cqrs.Azure.Saga\Dauber.Cqrs.Azure.Saga.csproj", "{36514366-B81A-41F6-A594-F4D3E7CA651D}"
@@ -24,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.TableStorage", "Dauber.Azure.TableStorage\Dauber.Azure.TableStorage.csproj", "{2F7DBF18-E619-4BF1-8C10-FBED0E10D08A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.ServiceBus", "Dauber.Azure.ServiceBus\Dauber.Azure.ServiceBus.csproj", "{79BA18F2-802F-45EF-B943-1DA70D64E4DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.DocumentDB.Test", "Dauber.Azure.DocumentDB.Test\Dauber.Azure.DocumentDB.Test.csproj", "{F397CD4C-2FA4-426F-AABF-506C41DA7E2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,6 @@ Global
 		{0CDD02B6-D879-4569-8654-A86D3B365A4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CDD02B6-D879-4569-8654-A86D3B365A4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CDD02B6-D879-4569-8654-A86D3B365A4D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD357F65-041D-49EE-99E4-E693E2E74046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD357F65-041D-49EE-99E4-E693E2E74046}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD357F65-041D-49EE-99E4-E693E2E74046}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD357F65-041D-49EE-99E4-E693E2E74046}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CD1BFE1C-89AE-482F-94C1-C9F75126FF84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CD1BFE1C-89AE-482F-94C1-C9F75126FF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD1BFE1C-89AE-482F-94C1-C9F75126FF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,12 +67,16 @@ Global
 		{79BA18F2-802F-45EF-B943-1DA70D64E4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79BA18F2-802F-45EF-B943-1DA70D64E4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79BA18F2-802F-45EF-B943-1DA70D64E4DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F397CD4C-2FA4-426F-AABF-506C41DA7E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F397CD4C-2FA4-426F-AABF-506C41DA7E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F397CD4C-2FA4-426F-AABF-506C41DA7E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F397CD4C-2FA4-426F-AABF-506C41DA7E2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{FD357F65-041D-49EE-99E4-E693E2E74046} = {779EC665-8266-4608-B21C-F3C731F7F396}
+		{F397CD4C-2FA4-426F-AABF-506C41DA7E2B} = {779EC665-8266-4608-B21C-F3C731F7F396}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6F3F8285-269F-4A95-B3DA-A86C4E1D02C5}

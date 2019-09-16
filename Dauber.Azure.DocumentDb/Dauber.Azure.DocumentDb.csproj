@@ -36,8 +36,8 @@
     <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Dauber.Core, Version=1.9.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dauber.Core.1.9.4\lib\netstandard2.0\Dauber.Core.dll</HintPath>
+    <Reference Include="Dauber.Core, Version=1.10.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dauber.Core.1.10.9\lib\netstandard2.0\Dauber.Core.dll</HintPath>
     </Reference>
     <Reference Include="HighIronRanch.Core">
       <HintPath>..\Dauber.Cqrs.Azure.ServiceBus\packages\HighIronRanch.Core.1.0.8.0\lib\net45\HighIronRanch.Core.dll</HintPath>

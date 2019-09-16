@@ -12,7 +12,7 @@ namespace Dauber.Azure.DocumentDb
 {
     /// <summary>
     /// Make this a singleton.
-    /// </summary>\\Mac\Home\Documents\Development\dauber-site\Dauber.Azure.DocumentDb\ReliableReadWriteDocumentClientFactory.cs
+    /// </summary>
     public class ReliableReadWriteDocumentClientFactory : IReliableReadWriteDocumentClientFactory
     {
         private readonly ILogger _logger;
@@ -24,20 +24,25 @@ namespace Dauber.Azure.DocumentDb
             _logger = logger;
         }
 
-        public async Task<Container> GetClientAsync(IDocumentDbSettings settings)
+        public async Task<Container> GetContainerAsync(IDocumentDbSettings settings)
         {
             var key = settings.DocumentDbRepositoryEndpointUrl + settings.DocumentDbRepositoryDatabaseId;
 
             if (_containers.ContainsKey(key)) return _containers[key];
 
-            _logger.Debug(Common.LoggerContext, "Creating DocumentDb Client for {0}", settings.DocumentDbRepositoryEndpointUrl);
-                
-            var client = new CosmosClient(settings.DocumentDbRepositoryEndpointUrl, settings.DocumentDbRepositoryAuthKey);
-            var databaseResponse = await client.CreateDatabaseIfNotExistsAsync(settings.DocumentDbRepositoryDatabaseId);
-            var containerResponse = await databaseResponse.Database.CreateContainerIfNotExistsAsync(settings.DocumentDbRepositoryCollectionId, "/id", 400);
+            lock(_containers)
+            {
+                if (_containers.ContainsKey(key)) return _containers[key];
 
-            _containers[key] = containerResponse.Container;
-            return _containers[key];
-        }        
+                _logger.Debug(Common.LoggerContext, "Creating DocumentDb Client for {0}", settings.DocumentDbRepositoryEndpointUrl);
+                    
+                var client = new CosmosClient(settings.DocumentDbRepositoryEndpointUrl, settings.DocumentDbRepositoryAuthKey);            
+                var database = client.GetDatabase(settings.DocumentDbRepositoryDatabaseId);            
+                var container = database.GetContainer(settings.DocumentDbRepositoryCollectionId);
+
+                _containers[key] = container;
+                return _containers[key];
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Dauber.Core.Container;
 using HighIronRanch.Azure.ServiceBus;
@@ -17,6 +18,10 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         public async Task RenewLockAsync()
         {            
         }
+
+        public int DeliveryCount => 0;
+        public bool IsLastDelivery => true;
+        public CancellationToken CancellationToken => new CancellationToken();
     }
 
     public class CommandBus : IAsyncCommandBus

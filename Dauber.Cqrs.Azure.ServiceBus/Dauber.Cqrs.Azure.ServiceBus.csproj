@@ -45,11 +45,11 @@
     <Reference Include="FluentValidation, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.7.1.0\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=2.3.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.2.3.12\lib\net461\HighIronRanch.Azure.ServiceBus.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.ServiceBus, Version=2.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.2.4.1\lib\net461\HighIronRanch.Azure.ServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.0.17.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.0.17\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
+    <Reference Include="HighIronRanch.Azure.ServiceBus.Contracts, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HighIronRanch.Azure.ServiceBus.Contracts.1.1.0\lib\net45\HighIronRanch.Azure.ServiceBus.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="HighIronRanch.Azure.TableStorage, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HighIronRanch.Azure.TableStorage.2.0.2\lib\net45\HighIronRanch.Azure.TableStorage.dll</HintPath>
@@ -183,13 +183,16 @@
     <Compile Include="Command.cs" />
     <Compile Include="CommandBus.cs" />
     <Compile Include="AggregateCommandRejectedAttribute.cs" />
+    <Compile Include="CsvHandlerStatusProcessor.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventBus.cs" />
     <Compile Include="EventHandler.cs" />
-    <Compile Include="HandlerStatusProcessor.cs" />
+    <Compile Include="HandlerStatus.cs" />
     <Compile Include="IAsyncCommandBus.cs" />
     <Compile Include="ICommandErrorEvent.cs" />
+    <Compile Include="ICsvHandlerStatusProcessor.cs" />
     <Compile Include="IServiceBusTelemetryProperties.cs" />
+    <Compile Include="NullCsvHandlerStatusProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScheduledMessageRepository.cs" />
     <Compile Include="ServiceBusTelemetryProperties.cs" />

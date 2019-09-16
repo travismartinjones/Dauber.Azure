@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dauber.Core.Contracts;
+using NUnit.Framework;
 using Shouldly;
-using Xunit;
 
 namespace Dauber.Azure.DocumentDb.Test
 {
-    public class TestViewModel : ViewModel
-    {
-        public bool Test { get; set; }
-    }
-
+    [TestFixture]
     public class HelpersSpecs
     {
-        [Fact]
+        [Test]
         public void TestHelper()
         {
             var result = Helpers.GetPropertySelectNames<TestViewModel>("b");
