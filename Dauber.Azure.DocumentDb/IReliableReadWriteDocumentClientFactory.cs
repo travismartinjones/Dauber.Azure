@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
+using Microsoft.Azure.Cosmos;
 
 namespace Dauber.Azure.DocumentDb
 {
     public interface IReliableReadWriteDocumentClientFactory
     {
-        Task<IDocumentClient> GetClientAsync(IDocumentDbSettings settings);
+        Task<Container> GetContainerAsync(IDocumentDbSettings settings);
     }
 }

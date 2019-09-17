@@ -23,7 +23,7 @@ namespace Dauber.Azure.Blob
 
         public async Task<BlobCreationResponse> InsertAsync(string contentType, string blobName, byte[] data, bool isPrivate = true)
         {
-            var container = isPrivate ? await GetPrivateContainer() : await GetPublicContainer();
+            var container = isPrivate ? await GetPrivateContainer().ConfigureAwait(false) : await GetPublicContainer().ConfigureAwait(false);
             var blockBlob = container.GetBlockBlobReference(blobName);            
             await blockBlob.UploadFromByteArrayAsync(data, 0, data.Length).ConfigureAwait(false);
             blockBlob.Properties.ContentType = contentType;
@@ -37,13 +37,13 @@ namespace Dauber.Azure.Blob
 
         public async Task DeleteAsync(string blobUrl)
         {
-            var blockBlob = await GetBlockBlob(blobUrl);
+            var blockBlob = await GetBlockBlob(blobUrl).ConfigureAwait(false);
             await blockBlob.DeleteAsync().ConfigureAwait(false);
         }
 
         public async Task<Contracts.Blob> GetAsync(string blobUrl)
         {
-            var blockBlob = await GetBlockBlob(blobUrl);            
+            var blockBlob = await GetBlockBlob(blobUrl).ConfigureAwait(false);            
 
             using (var memoryStream = new MemoryStream())
             {
@@ -59,14 +59,14 @@ namespace Dauber.Azure.Blob
         private async Task<CloudBlockBlob> GetBlockBlob(string blobUrl)
         {
             var blobName = GetBlobNameFromUrl(blobUrl);
-            var container = await GetContainerForUrl(blobUrl);
+            var container = await GetContainerForUrl(blobUrl).ConfigureAwait(false);
             return container.GetBlockBlobReference(blobName);
         }
 
         public async Task<string> GetValetKeyUri(string blobUrl, int secondsToExpireKey)
         {
             var blobName = GetBlobNameFromUrl(blobUrl);
-            var container = await GetContainerForUrl(blobUrl);
+            var container = await GetContainerForUrl(blobUrl).ConfigureAwait(false);
             var blob = container.GetBlockBlobReference(blobName);
 
             var sasConstraints = new SharedAccessBlobPolicy
@@ -92,7 +92,7 @@ namespace Dauber.Azure.Blob
         {
             var storageAccount = CloudStorageAccount.Parse(_blobSettings.ConnectionString);
             var blob = new CloudBlockBlob(new Uri(blobUrl), storageAccount.Credentials);
-            return blob.Container.Name == PrivateContainerName ? await GetPrivateContainer() : await GetPublicContainer();
+            return blob.Container.Name == PrivateContainerName ? await GetPrivateContainer().ConfigureAwait(false) : await GetPublicContainer().ConfigureAwait(false);
         }
 
         private async Task<CloudBlobContainer> GetPrivateContainer()
@@ -100,7 +100,7 @@ namespace Dauber.Azure.Blob
             var storageAccount = CloudStorageAccount.Parse(_blobSettings.ConnectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference(PrivateContainerName);            
-            await container.CreateIfNotExistsAsync();            
+            await container.CreateIfNotExistsAsync().ConfigureAwait(false);            
             return container;
         }
 
@@ -110,13 +110,13 @@ namespace Dauber.Azure.Blob
             var blobClient = storageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference(PublicContainerName);
 
-            if (await container.CreateIfNotExistsAsync())
+            if (await container.CreateIfNotExistsAsync().ConfigureAwait(false))
             {
                 await container.SetPermissionsAsync(new BlobContainerPermissions
                 {
                     // set access to public for the container
                     PublicAccess = BlobContainerPublicAccessType.Blob
-                });
+                }).ConfigureAwait(false);
             }
 
             return container;

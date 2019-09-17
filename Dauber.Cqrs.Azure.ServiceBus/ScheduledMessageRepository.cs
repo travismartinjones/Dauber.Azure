@@ -44,7 +44,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         
         public async Task Insert(string sessionId, string messageId, long sequenceId, string type, DateTime submitDate, DateTime scheduleEnqueueDate)
         {
-            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false).ConfigureAwait(false);
             var entity = new ScheduledMessage(sessionId, messageId, sequenceId, type, submitDate, scheduleEnqueueDate);
             var insertOperation = TableOperation.Insert(entity);
             await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
@@ -52,7 +52,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
 
         public async Task Delete(string sessionId, string messageId)
         {
-            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false).ConfigureAwait(false);
             
             var query = new TableQuery<ScheduledMessage>()
                 .Where(TableQuery
@@ -67,7 +67,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             TableContinuationToken continuationToken = null;
             do
             {
-                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken).ConfigureAwait(false);
                 if (result.Results?.Count > 0)
                 {
                     results.AddRange(result.Results);
@@ -97,7 +97,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
 
         public async Task<HighIronRanch.Azure.ServiceBus.Contracts.ScheduledMessage> GetBySessionIdMessageId(string sessionId, string messageId)
         {
-            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);            
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false).ConfigureAwait(false);            
 
             var query = new TableQuery<ScheduledMessage>()
                 .Where(TableQuery
@@ -112,7 +112,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             TableContinuationToken continuationToken = null;
             do
             {
-                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken).ConfigureAwait(false);
                 if (result.Results?.Count > 0)
                 {
                     results.AddRange(result.Results);
@@ -125,7 +125,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
 
         public async Task<List<HighIronRanch.Azure.ServiceBus.Contracts.ScheduledMessage>> GetBySessionIdType(string sessionId, string type)
         {
-            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);            
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false).ConfigureAwait(false);            
 
             var query = new TableQuery<ScheduledMessage>()
                 .Where(TableQuery
@@ -140,7 +140,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             TableContinuationToken continuationToken = null;
             do
             {
-                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken).ConfigureAwait(false);
                 if (result.Results?.Count > 0)
                 {
                     results.AddRange(result.Results);
@@ -153,7 +153,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
 
         public async Task<List<HighIronRanch.Azure.ServiceBus.Contracts.ScheduledMessage>> GetBySessionIdTypeScheduledDateRange(string sessionId, string type, DateTime startDate, DateTime endDate)
         {
-            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false);
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false).ConfigureAwait(false);
 
             var keyFilter = TableQuery
                 .CombineFilters(
@@ -169,7 +169,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             TableContinuationToken continuationToken = null;
             do
             {
-                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken).ConfigureAwait(false);
                 if (result.Results?.Count > 0)
                 {
                     all.AddRange(result.Results);
@@ -178,7 +178,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             } while (continuationToken != null);
             
             // now that we have every message for a type, take this opportunity to clear out any old messages
-            await CleanupExpiredMessages(all);
+            await CleanupExpiredMessages(all).ConfigureAwait(false);
 
             var results = all.Where(x => x.ScheduleEnqueueDate >= startDate && x.ScheduleEnqueueDate <= endDate).ToList();
 
@@ -188,7 +188,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         private async Task CleanupExpiredMessages(List<ScheduledMessage> all)
         {
             foreach (var expired in all.Where(x => x.ScheduleEnqueueDate < DateTime.UtcNow))
-                await Delete(expired.PartitionKey, expired.RowKey);
+                await Delete(expired.PartitionKey, expired.RowKey).ConfigureAwait(false);
         }
 
         private List<HighIronRanch.Azure.ServiceBus.Contracts.ScheduledMessage> ConvertToDomainEvent(IEnumerable<ScheduledMessage> query)
