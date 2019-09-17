@@ -2,8 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using Dauber.Azure.Blob.Contracts;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
 
 namespace Dauber.Azure.Blob
 {
@@ -11,8 +11,8 @@ namespace Dauber.Azure.Blob
     {
         private const string PrivateContainerName = "private";
         private const string PublicContainerName = "public";
-        private readonly IBlobSettings _blobSettings;
-        
+        private readonly IBlobSettings _blobSettings;               
+
         public BlobStore(IBlobSettings blobSettings)
         {
             if(blobSettings == null)
@@ -40,20 +40,42 @@ namespace Dauber.Azure.Blob
             var blockBlob = await GetBlockBlob(blobUrl).ConfigureAwait(false);
             await blockBlob.DeleteAsync().ConfigureAwait(false);
         }
+        
+        public async Task DeleteAsync(string blobUrl, bool isPrivate)
+        {
+            var blockBlob = (isPrivate ? await GetPrivateContainer().ConfigureAwait(false) : await GetPublicContainer().ConfigureAwait(false)).GetBlockBlobReference(blobUrl);
+            await DeleteAsync(blockBlob).ConfigureAwait(false);
+        }
+
+        public async Task DeleteAsync(CloudBlockBlob blockBlob)
+        {
+            await blockBlob.DeleteAsync().ConfigureAwait(false);
+        }
 
         public async Task<Contracts.Blob> GetAsync(string blobUrl)
         {
-            var blockBlob = await GetBlockBlob(blobUrl).ConfigureAwait(false);            
+            return await GetAsync(await GetBlockBlob(blobUrl).ConfigureAwait(false)).ConfigureAwait(false);
+        }
 
+        private async Task<Contracts.Blob> GetAsync(CloudBlockBlob blockBlob)
+        {
             using (var memoryStream = new MemoryStream())
             {
-                await blockBlob.DownloadToStreamAsync(memoryStream).ConfigureAwait(false);
+                await blockBlob.DownloadToStreamAsync(memoryStream, null, new BlobRequestOptions { DisableContentMD5Validation = true }, new OperationContext()).ConfigureAwait(false);
                 return new Contracts.Blob
                 {
                     ContentType = blockBlob.Properties.ContentType,
                     Data = memoryStream.ToArray()
                 };
             }
+        }
+
+
+
+        public async Task<Contracts.Blob> GetAsync(string blobUrl, bool isPrivate)
+        {
+            var blockBlob = (isPrivate ? await GetPrivateContainer().ConfigureAwait(false) : await GetPublicContainer().ConfigureAwait(false)).GetBlockBlobReference(blobUrl);
+            return await GetAsync(blockBlob).ConfigureAwait(false);
         }
 
         private async Task<CloudBlockBlob> GetBlockBlob(string blobUrl)

@@ -27,6 +27,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             public string Type { get; set; }
             public DateTime SubmitDate { get; set; }
             public DateTime ScheduleEnqueueDate { get; set; }
+            public bool IsCancelled { get; set; }
             protected override int AdditionalPropertySizes => 0;
 
             public ScheduledMessage() { }
@@ -47,6 +48,40 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false).ConfigureAwait(false);
             var entity = new ScheduledMessage(sessionId, messageId, sequenceId, type, submitDate, scheduleEnqueueDate);
             var insertOperation = TableOperation.Insert(entity);
+            await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
+        }
+
+        public async Task Cancel(string sessionId, string messageId)
+        {
+            var table = await _tableService.GetTable(EVENT_STORE_TABLE_NAME, false).ConfigureAwait(false);            
+
+            var query = new TableQuery<ScheduledMessage>()
+                .Where(TableQuery
+                    .CombineFilters(
+                        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, sessionId),
+                        TableOperators.And,
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, messageId)
+                    )
+                );
+
+            
+            var results = new List<ScheduledMessage>();
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var result = await table.ExecuteQuerySegmentedAsync(query, continuationToken).ConfigureAwait(false);
+                if (result.Results?.Count > 0)
+                {
+                    results.AddRange(result.Results);
+                }
+                continuationToken = result.ContinuationToken;
+            } while (continuationToken != null);
+
+            var entity = results.FirstOrDefault();
+
+            if (entity == null) return;            
+            entity.IsCancelled = true;
+            var insertOperation = TableOperation.InsertOrReplace(entity);
             await table.ExecuteAsync(insertOperation).ConfigureAwait(false);
         }
 

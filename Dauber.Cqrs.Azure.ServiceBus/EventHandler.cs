@@ -26,12 +26,12 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             _correlationEventHandler = correlationEventHandler;
         }
 
-        public async Task HandleAsync(T evt)
+        public async Task HandleAsync(T evt, IEventActions eventActions)
         {
             try
             {
                 AddTelemetryProperties(evt);
-                await ProcessAsync(evt).ConfigureAwait(false);
+                await ProcessAsync(evt, eventActions).ConfigureAwait(false);
                 
                 if (evt is ICorrelationEvent correlationEvent)
                     await _correlationEventHandler.Handle(correlationEvent).ConfigureAwait(false);
@@ -57,6 +57,6 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             _serviceBusTelemetryProperties.Add("message", evt?.ToJson() ?? "{}");
         }
 
-        public abstract Task ProcessAsync(T evt);
+        public abstract Task ProcessAsync(T evt, IEventActions eventActions);
     }
 }
