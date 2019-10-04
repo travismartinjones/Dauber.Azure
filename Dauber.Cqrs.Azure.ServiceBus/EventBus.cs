@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using HighIronRanch.Azure.ServiceBus;
 using HighIronRanch.Azure.ServiceBus.Contracts;
+using SimpleCqrs.Eventing;
 
 namespace Cqrs.Azure.ServiceBus
 {
@@ -25,6 +26,11 @@ namespace Cqrs.Azure.ServiceBus
             {
                 await PublishEvent(domainEvent).ConfigureAwait(false);
             }
+        }
+
+        public bool IsEventTypeHandled(DomainEvent domainEvent)
+        {
+            return domainEvent is IEvent;
         }
     }
 }

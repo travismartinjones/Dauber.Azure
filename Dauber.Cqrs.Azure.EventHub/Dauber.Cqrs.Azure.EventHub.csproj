@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.0.6</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dauber.Azure.EventHub.Contracts" Version="1.0.6" />
+    <PackageReference Include="Dauber.Core" Version="1.10.9" />
+    <PackageReference Include="Dauber.Cqrs.Contracts" Version="2.1.0" />
+    <PackageReference Include="HighIronRanch.Azure.ServiceBus" Version="3.4.1" />
+    <PackageReference Include="SimpleCqrs" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dauber.Cqrs.Azure.ServiceBus\Dauber.Cqrs.Azure.ServiceBus.csproj" />
+  </ItemGroup>
+
+</Project>

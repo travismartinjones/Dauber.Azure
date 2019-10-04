@@ -199,7 +199,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         {
             if (statusLastException == null) return "";
 
-            return $"{statusLastException.Date:O} - {statusLastException.Message.Replace(",",".").Replace("\r","").Replace("\n","--")} {statusLastException.Stack.Replace(",",".").Replace("\r","").Replace("\n","--")}";
+            return $"{statusLastException.Date:O} - {statusLastException.Message?.Replace(",",".").Replace("\r","").Replace("\n","--")} {statusLastException.Stack?.Replace(",",".").Replace("\r","").Replace("\n","--")}";
         }
 
         private double GetPerSecond(ConcurrentDictionary<int, int> entries)

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{779EC665-8266-4608-B21C-F3C731F7F396}"
 EndProject
@@ -19,9 +19,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.Azure.Saga", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.Azure.ServiceBus", "Dauber.Cqrs.Azure.ServiceBus\Dauber.Cqrs.Azure.ServiceBus.csproj", "{0B75F39D-5E9A-47FA-8AC6-F5ED290A7CD9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.DocumentDB.Test", "Dauber.Azure.DocumentDB.Test\Dauber.Azure.DocumentDB.Test.csproj", "{89D7E70B-5500-4C60-BDEF-3D76CDE52944}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.DocumentDB.Test", "Dauber.Azure.DocumentDB.Test\Dauber.Azure.DocumentDB.Test.csproj", "{89D7E70B-5500-4C60-BDEF-3D76CDE52944}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.DocumentDB", "Dauber.Azure.DocumentDB\Dauber.Azure.DocumentDB.csproj", "{6DCA0683-AB00-4269-8B23-593075B975BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.DocumentDB", "Dauber.Azure.DocumentDB\Dauber.Azure.DocumentDB.csproj", "{6DCA0683-AB00-4269-8B23-593075B975BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.EventHub", "Dauber.Azure.EventHub\Dauber.Azure.EventHub.csproj", "{D14EC15F-337A-4658-94B8-1B7A276371E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.Azure.EventHub", "Dauber.Cqrs.Azure.EventHub\Dauber.Cqrs.Azure.EventHub.csproj", "{7666718D-5B02-474F-932D-DFDF40A5A67F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.EventHub.Contracts", "Dauber.Azure.EventHub.Contracts\Dauber.Azure.EventHub.Contracts.csproj", "{5AD73613-DAEA-4BED-B194-3C6204F4B261}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.Azure.Composite", "Dauber.Cqrs.Azure.Composite\Dauber.Cqrs.Azure.Composite.csproj", "{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +73,22 @@ Global
 		{6DCA0683-AB00-4269-8B23-593075B975BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DCA0683-AB00-4269-8B23-593075B975BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DCA0683-AB00-4269-8B23-593075B975BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D14EC15F-337A-4658-94B8-1B7A276371E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D14EC15F-337A-4658-94B8-1B7A276371E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D14EC15F-337A-4658-94B8-1B7A276371E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D14EC15F-337A-4658-94B8-1B7A276371E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7666718D-5B02-474F-932D-DFDF40A5A67F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7666718D-5B02-474F-932D-DFDF40A5A67F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7666718D-5B02-474F-932D-DFDF40A5A67F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7666718D-5B02-474F-932D-DFDF40A5A67F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AD73613-DAEA-4BED-B194-3C6204F4B261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AD73613-DAEA-4BED-B194-3C6204F4B261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AD73613-DAEA-4BED-B194-3C6204F4B261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AD73613-DAEA-4BED-B194-3C6204F4B261}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

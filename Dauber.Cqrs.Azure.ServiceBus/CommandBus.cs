@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Dauber.Core.Container;
 using HighIronRanch.Azure.ServiceBus;
@@ -11,18 +10,7 @@ using HighIronRanch.Azure.ServiceBus.Contracts;
 using ICommand = SimpleCqrs.Commanding.ICommand;
 
 namespace Dauber.Cqrs.Azure.ServiceBus
-{    
-    public class ExecuteCommandActions : ICommandActions
-    {
-        public async Task RenewLockAsync()
-        {            
-        }
-
-        public int DeliveryCount => 1;
-        public bool IsLastDelivery => true;
-        public CancellationToken CancellationToken => new CancellationToken();
-    }
-
+{
     public class CommandBus : IAsyncCommandBus
     {
         private readonly IServiceBusWithHandlers _serviceBus;
@@ -33,6 +21,7 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             _serviceBus = serviceBus;
         }
 
+        [Obsolete("Use async method instead")]
         public int Execute<TCommand>(TCommand command) where TCommand : ICommand
         {
             throw new NotImplementedException("Use async signature ExecuteAsync instead.");
@@ -52,19 +41,20 @@ namespace Dauber.Cqrs.Azure.ServiceBus
             return 1;
         }        
 
+        [Obsolete("Use async method instead")]
         public void Send<TCommand>(TCommand command) where TCommand : ICommand
         {
-            SendAsync(command).Wait();
+            throw new NotImplementedException("Use async signature SendAsync instead.");
         }
         
-        public async Task SendAsync<TCommand>(TCommand command, DateTime? enqueueTime = null) where TCommand : ICommand
+        public async Task SendAsync<TCommand>(TCommand command, DateTime? enqueueTime = null) where TCommand : ICommand, HighIronRanch.Azure.ServiceBus.Contracts.ICommand
         {            
             ValidateCommand(command);
 
-            await _serviceBus.SendAsync((HighIronRanch.Azure.ServiceBus.Contracts.ICommand)command, enqueueTime).ConfigureAwait(false);
+            await _serviceBus.SendAsync(command, enqueueTime).ConfigureAwait(false);
         }
 
-        private static void ValidateCommand<TCommand>(TCommand command) where TCommand : ICommand
+        private static void ValidateCommand<TCommand>(TCommand command) where TCommand : ICommand, HighIronRanch.Azure.ServiceBus.Contracts.ICommand
         {
             var validators = IoC.GetAllInstances<IValidator<TCommand>>();
 
