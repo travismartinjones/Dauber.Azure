@@ -8,6 +8,7 @@ namespace Dauber.Azure.EventHub
 {
     public class EventProcessorFactory : IEventProcessorFactory
     {
+        private readonly IEventHubSettings _settings;
         private readonly IHandlerActivator _handlerActivator;
         private readonly IExceptionLogger _exceptionLogger;
         private readonly IHubEventErrorBus _hubEventErrorBus;
@@ -16,6 +17,7 @@ namespace Dauber.Azure.EventHub
         private readonly IDictionary<Type, ISet<Type>> _eventHandlers;
 
         public EventProcessorFactory(
+            IEventHubSettings settings,
             IHandlerActivator handlerActivator,
             IExceptionLogger exceptionLogger,
             IHubEventErrorBus hubEventErrorBus,
@@ -23,6 +25,7 @@ namespace Dauber.Azure.EventHub
             IDictionary<Type, Type> commandHandlers,
             IDictionary<Type, ISet<Type>> eventHandlers)
         {
+            _settings = settings;
             _handlerActivator = handlerActivator;
             _exceptionLogger = exceptionLogger;
             _hubEventErrorBus = hubEventErrorBus;
@@ -33,7 +36,7 @@ namespace Dauber.Azure.EventHub
 
         public IEventProcessor CreateEventProcessor(PartitionContext context)
         {
-            return new EventHubProcessor(_handlerActivator, _exceptionLogger, _hubEventErrorBus, _hubCommandErrorBus, _commandHandlers, _eventHandlers);
+            return new EventHubProcessor(_settings, _handlerActivator, _exceptionLogger, _hubEventErrorBus, _hubCommandErrorBus, _commandHandlers, _eventHandlers);
         }
     }
 }

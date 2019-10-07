@@ -7,5 +7,6 @@
         string ServiceBusMasterPrefix { get; }
         // eg. s.site
         string SubscriberName { get; }
+        bool IsFallbackToServiceBusEnabled { get; }
     }
 }

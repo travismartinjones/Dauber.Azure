@@ -31,12 +31,9 @@ namespace Dauber.Cqrs.Azure.EventHub
 
         public bool IsEventTypeHandled(DomainEvent domainEvent)
         {
-            if (domainEvent is IHubEvent hubEvent)
-            {
-                return !hubEvent.IsHubError;
-            }
+            if (!(domainEvent is IHubEvent hubEvent)) return false;
 
-            return false;
+            return !hubEvent.IsHubError;
         }
     }
 }

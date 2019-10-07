@@ -25,11 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.DocumentDB", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.EventHub", "Dauber.Azure.EventHub\Dauber.Azure.EventHub.csproj", "{D14EC15F-337A-4658-94B8-1B7A276371E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.Azure.EventHub", "Dauber.Cqrs.Azure.EventHub\Dauber.Cqrs.Azure.EventHub.csproj", "{7666718D-5B02-474F-932D-DFDF40A5A67F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.Azure.EventHub", "Dauber.Cqrs.Azure.EventHub\Dauber.Cqrs.Azure.EventHub.csproj", "{7666718D-5B02-474F-932D-DFDF40A5A67F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.EventHub.Contracts", "Dauber.Azure.EventHub.Contracts\Dauber.Azure.EventHub.Contracts.csproj", "{5AD73613-DAEA-4BED-B194-3C6204F4B261}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.EventHub.Contracts", "Dauber.Azure.EventHub.Contracts\Dauber.Azure.EventHub.Contracts.csproj", "{5AD73613-DAEA-4BED-B194-3C6204F4B261}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.Azure.Composite", "Dauber.Cqrs.Azure.Composite\Dauber.Cqrs.Azure.Composite.csproj", "{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.Azure.Composite", "Dauber.Cqrs.Azure.Composite\Dauber.Cqrs.Azure.Composite.csproj", "{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.Settings", "Dauber.Azure.Settings\Dauber.Azure.Settings.csproj", "{04984743-280B-4286-954A-342289A80646}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,10 @@ Global
 		{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04984743-280B-4286-954A-342289A80646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04984743-280B-4286-954A-342289A80646}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04984743-280B-4286-954A-342289A80646}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04984743-280B-4286-954A-342289A80646}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

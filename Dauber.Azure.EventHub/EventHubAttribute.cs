@@ -6,10 +6,12 @@ namespace Dauber.Azure.EventHub
     public class EventHubAttribute : Attribute
     {
         public string Name { get; }
+        public bool IsFallbackToServiceBusEnabled { get; }
 
-        public EventHubAttribute(string name)
+        public EventHubAttribute(string name, bool isFallbackToServiceBusEnabled)
         {
             Name = name;
+            IsFallbackToServiceBusEnabled = isFallbackToServiceBusEnabled;
         }
     }
 }

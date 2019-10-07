@@ -12,6 +12,7 @@ namespace Dauber.Azure.EventHub
 {
     public class EventHubProcessor : IEventProcessor
     {
+        private readonly IEventHubSettings _settings;
         private readonly IHandlerActivator _handlerActivator;
         private readonly IExceptionLogger _exceptionLogger;
         private readonly IHubEventErrorBus _hubEventErrorBus;
@@ -20,6 +21,7 @@ namespace Dauber.Azure.EventHub
         private readonly IDictionary<Type, ISet<Type>> _eventHandlers;
 
         public EventHubProcessor(
+            IEventHubSettings settings,
             IHandlerActivator handlerActivator, 
             IExceptionLogger exceptionLogger,
             IHubEventErrorBus hubEventErrorBus,
@@ -27,6 +29,7 @@ namespace Dauber.Azure.EventHub
             IDictionary<Type, Type> commandHandlers,
             IDictionary<Type, ISet<Type>> eventHandlers)
         {
+            _settings = settings;
             _handlerActivator = handlerActivator;
             _exceptionLogger = exceptionLogger;
             _hubEventErrorBus = hubEventErrorBus;
@@ -70,13 +73,18 @@ namespace Dauber.Azure.EventHub
                 {
                     await ProcessHubEvent(messageType, hubEvent).ConfigureAwait(false);
                 }
-                catch
+                catch(Exception ex)
                 {
                     // on any failure, pass over the message to an error handling bus (likely azure service bus)
                     // event hub doesn't have dead-lettering and passes error handling and poising message
                     // handling off to the partition clients, instead, defer that responsibility to a bus that 
                     // has support for these mechanisms
+                    _exceptionLogger.Log(ex);
                     hubEvent.IsHubError = true;
+
+                    if (!_settings.IsFallbackToServiceBusEnabled) return;
+                    var attribute = ((EventHubAttribute) Attribute.GetCustomAttribute(hubEvent.GetType(), typeof(EventHubAttribute)));
+                    if (!(attribute?.IsFallbackToServiceBusEnabled ?? false)) return;
                     await _hubEventErrorBus.ProcessAsync(hubEvent).ConfigureAwait(false);
                 }
             } 
@@ -87,12 +95,17 @@ namespace Dauber.Azure.EventHub
                     await ProcessHubCommand(messageType, hubCommand).ConfigureAwait(false);
                     
                 }
-                catch
+                catch(Exception ex)
                 {
                     // on any failure, pass over the message to an error handling bus (likely azure service bus)
                     // event hub doesn't have dead-lettering and passes error handling and poising message
                     // handling off to the partition clients, instead, defer that responsibility to a bus that 
                     // has support for these mechanisms
+                    _exceptionLogger.Log(ex);
+                    
+                    if (!_settings.IsFallbackToServiceBusEnabled) return;
+                    var attribute = ((EventHubAttribute) Attribute.GetCustomAttribute(hubCommand.GetType(), typeof(EventHubAttribute)));
+                    if (!(attribute?.IsFallbackToServiceBusEnabled ?? false)) return;
                     await _hubCommandErrorBus.ProcessAsync(hubCommand).ConfigureAwait(false);
                 }
             }

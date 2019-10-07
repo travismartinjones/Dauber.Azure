@@ -1,27 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dauber.Core.Contracts;
 using SimpleCqrs.Eventing;
 
 namespace Dauber.Cqrs.Azure.Composite
 {
     public class CompositeEventBus : IEventBus
     {
+        private readonly IEventBus _hubEventBus;
+        private readonly IEventBus _serviceBusEventBus;
+        private readonly IAppSettings _appSettings;
         private readonly IEnumerable<IEventBus> _buses;
 
-        public CompositeEventBus(IEnumerable<IEventBus> buses)
+        public CompositeEventBus(
+            IEventBus hubEventBus,
+            IEventBus serviceBusEventBus,
+            IAppSettings appSettings)
         {
-            _buses = buses;
+            _hubEventBus = hubEventBus;
+            _serviceBusEventBus = serviceBusEventBus;
+            _appSettings = appSettings;
         }
 
         public async Task PublishEvent(DomainEvent domainEvent)
         {
-            foreach (var bus in _buses)
+            if (_appSettings.GetByKey("IsEventHubEnabled", false))
             {
-                if (!bus.IsEventTypeHandled(domainEvent)) continue;
-                await bus.PublishEvent(domainEvent).ConfigureAwait(false);
+                if (_hubEventBus.IsEventTypeHandled(domainEvent))
+                {
+                    await _hubEventBus.PublishEvent(domainEvent).ConfigureAwait(false);
+                    return;
+                }
             }
+
+            await _serviceBusEventBus.PublishEvent(domainEvent).ConfigureAwait(false);
         }
 
         public async Task PublishEvents(IEnumerable<DomainEvent> domainEvents)

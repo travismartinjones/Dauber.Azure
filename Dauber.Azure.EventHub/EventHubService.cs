@@ -97,7 +97,7 @@ namespace Dauber.Azure.EventHub
             if (_eventProcessorHosts.ContainsKey(messageType)) return;
             var eventProcessorHost = new EventProcessorHost(
                 messageType.GetEventHubName(),
-                messageType.IsAssignableFrom(typeof(IHubEvent)) ? _settings.SubscriberName : PartitionReceiver.DefaultConsumerGroupName,
+                typeof(IHubEvent).IsAssignableFrom(messageType) ? _settings.SubscriberName : PartitionReceiver.DefaultConsumerGroupName,
                 _settings.AzureEventHubConnectionString,
                 _settings.AzureEventHubCheckpointConnectionString,
                 // the convention of the container name is the same as the event hub name, but with dots replaced with dashes
@@ -154,6 +154,7 @@ namespace Dauber.Azure.EventHub
             {
                 await eventProcessorHost.RegisterEventProcessorFactoryAsync(
                     new EventProcessorFactory(
+                        _settings,
                         _handlerActivator, 
                         _exceptionLogger,
                         _hubEventErrorBus,
