@@ -1,57 +1,124 @@
-﻿using System;
-using System.Collections.Generic;
-using Dauber.Core.Collections;
+﻿using System.Collections.Concurrent;
+using System.Text;
 using Dauber.Core.Contracts;
 using Dauber.Core.Time;
 
 namespace Dauber.Azure.Settings
 {
+    public class TimedCacheObject
+    {
+        public object Value { get; set; }
+        public System.DateTime Expiration { get; set; }
+    }
+    
+    public class TimedCacheString
+    {
+        public string Value { get; set; }
+        public System.DateTime Expiration { get; set; }
+    }
+
     public class CachedAppSettings : IAppSettings
     {
         private readonly AppSettings _appSettings;
         private readonly IStorageSettings _storageSettings;
-        private readonly ConcurrentTimeoutDictionary<string, object> _concurrentTimeoutDictionaryTyped;
-        private readonly ConcurrentTimeoutDictionary<string, string> _concurrentTimeoutDictionaryString;
-
+        private readonly IDateTime _dateTime;
+        private readonly ConcurrentDictionary<string, TimedCacheObject> _storageObjectCache = new ConcurrentDictionary<string, TimedCacheObject>();
+        private readonly ConcurrentDictionary<string, TimedCacheObject> _configObjectCache = new ConcurrentDictionary<string, TimedCacheObject>();
+        private readonly ConcurrentDictionary<string, TimedCacheString> _storageStringCache = new ConcurrentDictionary<string, TimedCacheString>();
+        private readonly ConcurrentDictionary<string, TimedCacheString> _configStringCache = new ConcurrentDictionary<string, TimedCacheString>();
+        
         public CachedAppSettings(AppSettings appSettings, IStorageSettings storageSettings, IDateTime dateTime)
         {
-            _concurrentTimeoutDictionaryTyped = new ConcurrentTimeoutDictionary<string, object>(dateTime, new TimeSpan(0, 0, 60));
-            _concurrentTimeoutDictionaryString = new ConcurrentTimeoutDictionary<string, string>(dateTime, new TimeSpan(0, 0, 60));
             _appSettings = appSettings;
             _storageSettings = storageSettings;
+            _dateTime = dateTime;
         }
 
         public T GetByKey<T>(string key, T defaultValue)
         {
-            if (_concurrentTimeoutDictionaryTyped.TryGetValue(key, out var returnValue))
-                return (T)returnValue;
-
-            var storageValue = _storageSettings.GetByKey<T>(key, defaultValue);
-            if (!EqualityComparer<T>.Default.Equals(storageValue, defaultValue))
+            _storageObjectCache.TryGetValue(key, out var existingValue);
+            if (existingValue?.Expiration < _dateTime.UtcNow)
             {
-                _concurrentTimeoutDictionaryTyped[key] = storageValue;
+                _storageObjectCache.TryRemove(key, out _);
+            }
+            else if (existingValue?.Value != null)
+            {
+                return (T) existingValue.Value;
+            }
+
+            _configObjectCache.TryGetValue(key, out existingValue);
+            if (existingValue?.Expiration < _dateTime.UtcNow)
+            {
+                _configObjectCache.TryRemove(key, out _);
+            }
+            else if(existingValue?.Value != null)
+            { 
+                return (T)existingValue.Value;
+            }
+
+            var storageValue = (T)_storageSettings.GetByKey<T>(key, defaultValue);
+            if (storageValue != null)
+            {
+                var val = new TimedCacheObject
+                {
+                    Expiration = _dateTime.UtcNow.AddSeconds(60),
+                    Value = storageValue
+                };
+                _storageObjectCache.AddOrUpdate(key, (s => val), (s, o) => val);
                 return storageValue;
             }
 
             var appSettingValue = _appSettings.GetByKey(key, defaultValue);
-            _concurrentTimeoutDictionaryTyped[key] = appSettingValue;
+            var appVal = new TimedCacheObject
+            {
+                Expiration = _dateTime.UtcNow.AddSeconds(60),
+                Value = appSettingValue
+            };
+            _configObjectCache.AddOrUpdate(key, (s => appVal), (s, o) => appVal);
             return appSettingValue;
         }
 
         public string GetByKey(string key)
         {
-            if (_concurrentTimeoutDictionaryString.TryGetValue(key, out var returnValue))
-                return returnValue;
-
-            var storageValue = _storageSettings.GetByKey(key);
-            if (!string.IsNullOrEmpty(storageValue))
+            _storageStringCache.TryGetValue(key, out var existingValue);
+            if (existingValue?.Expiration < _dateTime.UtcNow)
             {
-                _concurrentTimeoutDictionaryString[key] = storageValue;
+                _storageStringCache.TryRemove(key, out _);
+            }
+            else if (existingValue?.Value != null)
+            {
+                return existingValue.Value;
+            }
+
+            _configStringCache.TryGetValue(key, out existingValue);
+            if (existingValue?.Expiration < _dateTime.UtcNow)
+            {
+                _configStringCache.TryRemove(key, out _);
+            }
+            else if(existingValue?.Value != null)
+            { 
+                return existingValue.Value;
+            }
+
+            var storageValue = _storageSettings.GetByKey(key, "");
+            if (storageValue != null)
+            {
+                var val = new TimedCacheString
+                {
+                    Expiration = _dateTime.UtcNow.AddSeconds(60),
+                    Value = storageValue
+                };
+                _storageStringCache.AddOrUpdate(key, (s => val), (s, o) => val);
                 return storageValue;
             }
 
-            var appSettingValue = _appSettings.GetByKey(key);
-            _concurrentTimeoutDictionaryString[key] = appSettingValue;
+            var appSettingValue = _appSettings.GetByKey(key, "");
+            var appVal = new TimedCacheString
+            {
+                Expiration = _dateTime.UtcNow.AddSeconds(60),
+                Value = appSettingValue
+            };
+            _configStringCache.AddOrUpdate(key, (s => appVal), (s, o) => appVal);
             return appSettingValue;
         }
     }
