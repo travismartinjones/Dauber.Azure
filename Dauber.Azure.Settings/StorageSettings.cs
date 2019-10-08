@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 
 namespace Dauber.Azure.Settings
 {
+    public interface ISettingsBlobStoreSettings : IBlobSettings {}
+
     public class StorageSettings : IStorageSettings
     {
         private readonly IExceptionLogger _exceptionLogger;
@@ -19,10 +21,11 @@ namespace Dauber.Azure.Settings
         
         public StorageSettings(
             string environment,
+            ISettingsBlobStoreSettings settings,
             IExceptionLogger exceptionLogger)
         {
             _exceptionLogger = exceptionLogger;
-            _blobStore = new BlobStore(new SettingsBlobStoreSettings());
+            _blobStore = new BlobStore(settings);
             Task.Run(async () =>
             {
                 while (true)
