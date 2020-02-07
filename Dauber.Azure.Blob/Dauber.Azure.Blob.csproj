@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.2.0</Version>
+    <Version>2.3.0</Version>
     <PackageId>Dauber.Azure.Blob</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dauber.Azure.Blob.Contracts" Version="2.1.1" />
+    <PackageReference Include="Dauber.Azure.Blob.Contracts" Version="2.1.3" />
     <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.0.1" />
   </ItemGroup>
 

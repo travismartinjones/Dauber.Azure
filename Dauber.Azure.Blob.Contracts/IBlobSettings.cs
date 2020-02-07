@@ -3,5 +3,6 @@
     public interface IBlobSettings
     {
         string ConnectionString { get; }
+        bool IsContainerCreatedIfMissing { get; }
     }
 }

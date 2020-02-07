@@ -31,7 +31,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.EventHub.Contr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.Azure.Composite", "Dauber.Cqrs.Azure.Composite\Dauber.Cqrs.Azure.Composite.csproj", "{89EDBE9C-B787-4D54-ADE4-5571B5D9379A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.Settings", "Dauber.Azure.Settings\Dauber.Azure.Settings.csproj", "{04984743-280B-4286-954A-342289A80646}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.Settings", "Dauber.Azure.Settings\Dauber.Azure.Settings.csproj", "{04984743-280B-4286-954A-342289A80646}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.Settings.Test", "Dauber.Azure.Settings.Test\Dauber.Azure.Settings.Test.csproj", "{9A0E7457-230A-407E-B479-AF7AEDF66B68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.ApplicationInsights", "Dauber.Azure.ApplicationInsights\Dauber.Azure.ApplicationInsights.csproj", "{5B79C716-A83F-49B6-993C-DC289F46516A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Azure.DocumentDB.ApplicationInsights", "Dauber.Azure.DocumentDB.ApplicationInsights\Dauber.Azure.DocumentDB.ApplicationInsights.csproj", "{6ACD15BE-F119-45CF-9547-1215DBED23CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,12 +101,25 @@ Global
 		{04984743-280B-4286-954A-342289A80646}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04984743-280B-4286-954A-342289A80646}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04984743-280B-4286-954A-342289A80646}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A0E7457-230A-407E-B479-AF7AEDF66B68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A0E7457-230A-407E-B479-AF7AEDF66B68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A0E7457-230A-407E-B479-AF7AEDF66B68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A0E7457-230A-407E-B479-AF7AEDF66B68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B79C716-A83F-49B6-993C-DC289F46516A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B79C716-A83F-49B6-993C-DC289F46516A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B79C716-A83F-49B6-993C-DC289F46516A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B79C716-A83F-49B6-993C-DC289F46516A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ACD15BE-F119-45CF-9547-1215DBED23CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ACD15BE-F119-45CF-9547-1215DBED23CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ACD15BE-F119-45CF-9547-1215DBED23CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ACD15BE-F119-45CF-9547-1215DBED23CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{89D7E70B-5500-4C60-BDEF-3D76CDE52944} = {779EC665-8266-4608-B21C-F3C731F7F396}
+		{9A0E7457-230A-407E-B479-AF7AEDF66B68} = {779EC665-8266-4608-B21C-F3C731F7F396}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6F3F8285-269F-4A95-B3DA-A86C4E1D02C5}

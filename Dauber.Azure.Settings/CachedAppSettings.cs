@@ -19,7 +19,7 @@ namespace Dauber.Azure.Settings
 
     public class CachedAppSettings : IAppSettings
     {
-        private readonly AppSettings _appSettings;
+        private readonly IAppSettings _appSettings;
         private readonly IStorageSettings _storageSettings;
         private readonly IDateTime _dateTime;
         private readonly ConcurrentDictionary<string, TimedCacheObject> _storageObjectCache = new ConcurrentDictionary<string, TimedCacheObject>();
@@ -27,7 +27,7 @@ namespace Dauber.Azure.Settings
         private readonly ConcurrentDictionary<string, TimedCacheString> _storageStringCache = new ConcurrentDictionary<string, TimedCacheString>();
         private readonly ConcurrentDictionary<string, TimedCacheString> _configStringCache = new ConcurrentDictionary<string, TimedCacheString>();
         
-        public CachedAppSettings(AppSettings appSettings, IStorageSettings storageSettings, IDateTime dateTime)
+        public CachedAppSettings(IAppSettings appSettings, IStorageSettings storageSettings, IDateTime dateTime)
         {
             _appSettings = appSettings;
             _storageSettings = storageSettings;
@@ -56,9 +56,10 @@ namespace Dauber.Azure.Settings
                 return (T)existingValue.Value;
             }
 
-            var storageValue = (T)_storageSettings.GetByKey<T>(key, defaultValue);
-            if (storageValue != null)
+            var stringStorageValue = _storageSettings.GetByKey(key);
+            if (!string.IsNullOrEmpty(stringStorageValue))
             {
+                var storageValue = (T)_storageSettings.GetByKey<T>(key, defaultValue);
                 var val = new TimedCacheObject
                 {
                     Expiration = _dateTime.UtcNow.AddSeconds(60),
@@ -101,7 +102,7 @@ namespace Dauber.Azure.Settings
             }
 
             var storageValue = _storageSettings.GetByKey(key, "");
-            if (storageValue != null)
+            if (!string.IsNullOrEmpty(storageValue))
             {
                 var val = new TimedCacheString
                 {

@@ -121,8 +121,12 @@ namespace Dauber.Azure.Blob
         {
             var storageAccount = CloudStorageAccount.Parse(_blobSettings.ConnectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(PrivateContainerName);            
-            await container.CreateIfNotExistsAsync().ConfigureAwait(false);            
+            var container = blobClient.GetContainerReference(PrivateContainerName);
+            if (_blobSettings.IsContainerCreatedIfMissing)
+            {
+                await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+            }
+
             return container;
         }
 
@@ -132,7 +136,7 @@ namespace Dauber.Azure.Blob
             var blobClient = storageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference(PublicContainerName);
 
-            if (await container.CreateIfNotExistsAsync().ConfigureAwait(false))
+            if (_blobSettings.IsContainerCreatedIfMissing && await container.CreateIfNotExistsAsync().ConfigureAwait(false))
             {
                 await container.SetPermissionsAsync(new BlobContainerPermissions
                 {
