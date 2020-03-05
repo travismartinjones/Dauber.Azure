@@ -15,3 +15,4 @@ Dauber.Cqrs.Azure.ServiceBus/obj/
 **/obj/
 **/bin/
 Dauber.Azure.ServiceBus/publish-nuget.bat
+Dauber.Cqrs.EventStore.Azure/publish-nuget.bat
