@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HighIronRanch.Azure.ServiceBus" Version="4.0.0" />
+    <PackageReference Include="HighIronRanch.Azure.ServiceBus" Version="4.0.4.1" />
     <PackageReference Include="LiteDB" Version="4.1.4" />
   </ItemGroup>
 

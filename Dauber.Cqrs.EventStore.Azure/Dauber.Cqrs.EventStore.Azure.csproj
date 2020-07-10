@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.1</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HighIronRanch.Cqrs.EventStore.Azure" Version="3.2.2" />
+    <PackageReference Include="HighIronRanch.Cqrs.EventStore.Azure" Version="3.3.1" />
   </ItemGroup>
 
   <ItemGroup>

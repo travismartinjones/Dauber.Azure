@@ -310,14 +310,19 @@ WHERE  c.DocType = 'SiteOperator' AND 'PMR' IN (c.NameMeta[0],c.NameMeta[1],c.Na
 
             // upsert the driver and verify the change
             get.Name = "Joe Test3";
+            get.MostRecentJobLoadId = Guid.Empty;
             response = await db.UpsertAsync(get).ConfigureAwait(false);
             get = await db.GetAsync<Driver>(driverId, response.SessionToken).ConfigureAwait(false);
             get.Name.ShouldBe("Joe Test3");
+
+            get = (await db.GetAsync<Driver>().ConfigureAwait(false)).Where(x => x.MostRecentJobLoadId.HasValue).AsQueryable().ToList().FirstOrDefault();
+            get.ShouldNotBeNull();
 
             // get the driver by a linq statement
             var where = (await db.GetAsync<Driver>().ConfigureAwait(false)).Where(x => x.FleetId == fleetId).ToList();
             where.Count.ShouldBe(1);
             where[0].Name.ShouldBe("Joe Test3");
+
 
             // delete the driver and verify it is gone
             db.Delete<Driver>(new [] {driverId});

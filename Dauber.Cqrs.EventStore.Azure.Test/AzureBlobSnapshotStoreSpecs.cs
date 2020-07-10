@@ -72,12 +72,49 @@ namespace Dauber.Cqrs.EventStore.Azure.Test
                 azureTableService,
                 domainEntityTypeBuilder
             );
-            var item = new SnapshotContent {AggregateRootId = new Guid("ec3ea6b8-6396-4c95-be2e-4d90f2c23736")};
+            var item = new SnapshotContent {AggregateRootId = new Guid("cc3ea6b8-6396-4c95-be2e-4d90f2c23736")};
+            
+            // set a new AggregateRootId for this to be tested
+            //var snapshot = await sut.GetSnapshot(item.AggregateRootId).ConfigureAwait(false);
+            //snapshot.ShouldBeNull(); 
+
             item.SetToLength(99999);
             await sut.SaveSnapshot(item).ConfigureAwait(false);
             var snapshot = await sut.GetSnapshot(item.AggregateRootId).ConfigureAwait(false);
             snapshot.ShouldNotBeNull();
             var cast = snapshot as SnapshotContent ;
+            cast.ShouldNotBeNull();
+            cast.Content.Count.ShouldBe(item.Content.Count);
+        }
+
+        [Test]
+        public async Task when_the_snapshot_changes_from_under_to_over_limits()
+        {
+            var blobStore = new BlobStore(new BlobSettings());
+            var azureBlobStore = new AzureBlobSnapshotStore(blobStore);
+            var azureTableService = new AzureTableService(new AzureTableSettings());
+            var sut = new AzureTableSnapshotStore(
+                azureBlobStore,
+                new AzureSnapshotBuilder(azureBlobStore),
+                azureTableService,
+                new DomainEntityTypeBuilder()
+            );
+            var item = new SnapshotContent {AggregateRootId = new Guid("e8ae8dd3-d3fd-434a-9775-82887bf1b2ce")};
+            item.SetToLength(10);
+            await sut.SaveSnapshot(item).ConfigureAwait(false);
+            var snapshot = await sut.GetSnapshot(item.AggregateRootId).ConfigureAwait(false);
+            snapshot.ShouldNotBeNull();
+            var cast = snapshot as SnapshotContent;
+            cast.ShouldNotBeNull();
+            cast.Content.Count.ShouldBe(item.Content.Count);
+
+            item.Content.Clear();
+            item.SetToLength(99999);
+
+            await sut.SaveSnapshot(item).ConfigureAwait(false);
+            snapshot = await sut.GetSnapshot(item.AggregateRootId).ConfigureAwait(false);
+            snapshot.ShouldNotBeNull();
+            cast = snapshot as SnapshotContent ;
             cast.ShouldNotBeNull();
             cast.Content.Count.ShouldBe(item.Content.Count);
         }

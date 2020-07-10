@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HighIronRanch.Azure.ServiceBus.Contracts;
 using HighIronRanch.Azure.TableStorage;
-using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.Cosmos.Table;
 
 namespace Dauber.Cqrs.Azure.ServiceBus
 {
