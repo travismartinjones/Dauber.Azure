@@ -66,6 +66,9 @@ namespace Dauber.Azure.DocumentDb.Test
     [TestFixture]
     public partial class RepositorySpecs
     {
+        private static string AuthKey = "";
+        private static string EntryPointUrl = "https://dauber-test.documents.azure.com:443/";
+
         [Test]
         public async Task NotFoundPartitioned()
         {            
@@ -77,8 +80,8 @@ namespace Dauber.Azure.DocumentDb.Test
                 IsPartitioned = true,
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-container",
-                DocumentDbRepositoryAuthKey = "fLMGnhzz8F7zjtajHOxUcUVN6sEcpYiEcJBJ73nd7WvdwCpJNiH89Loonu4hc0t2qhGv2HIVnvEHdu31d7kYjQ==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber-test.documents.azure.com:443/"
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
             }, factory, logger, telemetryLogger);
 
             var driver = (await db.GetAsync<Driver>(Guid.NewGuid()).ConfigureAwait(false));
@@ -101,8 +104,8 @@ namespace Dauber.Azure.DocumentDb.Test
                 IsPartitioned = false,
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-collection",
-                DocumentDbRepositoryAuthKey = "ewhSCsOUv2QzHeu3aCl1X6uAxQPMu11r1G4TlruWTg3wuaUf0pVybv4PGx0ZS7RMVS4vDBxE5TlQwWFYYOUTkA==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber.documents.azure.com:443/"
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
             }, factory, logger, telemetryLogger);
 
             var jobProjections = (await db.GetAsync<Job, Job>($@"
@@ -134,8 +137,8 @@ j.FleetAssignments[9].FleetId)
                 IsPartitioned = false,
                 DocumentDbRepositoryDatabaseId = "dauber-site-database",
                 DocumentDbRepositoryCollectionId = "dauber-site-collection",
-                DocumentDbRepositoryAuthKey = "ewhSCsOUv2QzHeu3aCl1X6uAxQPMu11r1G4TlruWTg3wuaUf0pVybv4PGx0ZS7RMVS4vDBxE5TlQwWFYYOUTkA==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber.documents.azure.com:443/"
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
             }, factory, logger, telemetryLogger);
 
             var jobProjections = (await db.GetAsync<Job, Job>($@"
@@ -157,8 +160,8 @@ WHERE  c.DocType = 'SiteOperator' AND 'PMR' IN (c.NameMeta[0],c.NameMeta[1],c.Na
                 IsPartitioned = true,
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-container",
-                DocumentDbRepositoryAuthKey = "fLMGnhzz8F7zjtajHOxUcUVN6sEcpYiEcJBJ73nd7WvdwCpJNiH89Loonu4hc0t2qhGv2HIVnvEHdu31d7kYjQ==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber-test.documents.azure.com:443/"
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
             }, factory, logger, telemetryLogger);
 
             var drivers = (await db.GetAsync<Driver>().ConfigureAwait(false)).Where(x => x.FleetId == new Guid("ae4afe26-28d0-4117-a12a-1dc6c02867cb")).ToList();
@@ -177,8 +180,8 @@ WHERE  c.DocType = 'SiteOperator' AND 'PMR' IN (c.NameMeta[0],c.NameMeta[1],c.Na
                 IsPartitioned = false,
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-collection",
-                DocumentDbRepositoryAuthKey = "ewhSCsOUv2QzHeu3aCl1X6uAxQPMu11r1G4TlruWTg3wuaUf0pVybv4PGx0ZS7RMVS4vDBxE5TlQwWFYYOUTkA==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber.documents.azure.com:443/"
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
             }, factory, logger, telemetryLogger);
 
             var drivers = (await db.GetAsync<Driver>().ConfigureAwait(false)).Where(x => x.FleetId == new Guid("9653867a-a055-4ec2-a3f1-1bc6b8714537")).ToList();
@@ -196,8 +199,8 @@ WHERE  c.DocType = 'SiteOperator' AND 'PMR' IN (c.NameMeta[0],c.NameMeta[1],c.Na
                 IsPartitioned = true,
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-container",
-                DocumentDbRepositoryAuthKey = "fLMGnhzz8F7zjtajHOxUcUVN6sEcpYiEcJBJ73nd7WvdwCpJNiH89Loonu4hc0t2qhGv2HIVnvEHdu31d7kYjQ==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber-test.documents.azure.com:443/"
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
             }, factory, logger, telemetryLogger);
             
             var driver = (await db.GetAsync<Driver>(new Guid("748e572a-e0cf-4e93-9b1b-f2b11d3df0b9")).ConfigureAwait(false));
@@ -216,8 +219,8 @@ WHERE  c.DocType = 'SiteOperator' AND 'PMR' IN (c.NameMeta[0],c.NameMeta[1],c.Na
             {
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-container",
-                DocumentDbRepositoryAuthKey = "fLMGnhzz8F7zjtajHOxUcUVN6sEcpYiEcJBJ73nd7WvdwCpJNiH89Loonu4hc0t2qhGv2HIVnvEHdu31d7kYjQ==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber-test.documents.azure.com:443/",
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
                 IsPartitioned = true
             }, factory, logger, telemetryLogger);
             // 748e572a-e0cf-4e93-9b1b-f2b11d3df0b9
@@ -236,8 +239,8 @@ WHERE  c.DocType = 'SiteOperator' AND 'PMR' IN (c.NameMeta[0],c.NameMeta[1],c.Na
                 IsPartitioned = true,
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-container",
-                DocumentDbRepositoryAuthKey = "fLMGnhzz8F7zjtajHOxUcUVN6sEcpYiEcJBJ73nd7WvdwCpJNiH89Loonu4hc0t2qhGv2HIVnvEHdu31d7kYjQ==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber-test.documents.azure.com:443/"
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
             }, factory, logger, telemetryLogger);
 
             var driverId = Guid.NewGuid();
@@ -285,8 +288,8 @@ WHERE  c.DocType = 'SiteOperator' AND 'PMR' IN (c.NameMeta[0],c.NameMeta[1],c.Na
                 IsPartitioned = true,
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-container",
-                DocumentDbRepositoryAuthKey = "fLMGnhzz8F7zjtajHOxUcUVN6sEcpYiEcJBJ73nd7WvdwCpJNiH89Loonu4hc0t2qhGv2HIVnvEHdu31d7kYjQ==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber-test.documents.azure.com:443/"
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
             }, factory, logger, telemetryLogger);
             
             // 748e572a-e0cf-4e93-9b1b-f2b11d3df0b9
@@ -362,8 +365,8 @@ WHERE  c.DocType = 'SiteOperator' AND 'PMR' IN (c.NameMeta[0],c.NameMeta[1],c.Na
                 IsPartitioned = false,
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-collection",
-                DocumentDbRepositoryAuthKey = "ewhSCsOUv2QzHeu3aCl1X6uAxQPMu11r1G4TlruWTg3wuaUf0pVybv4PGx0ZS7RMVS4vDBxE5TlQwWFYYOUTkA==",
-                DocumentDbRepositoryEndpointUrl = "https://dauber.documents.azure.com:443/"
+                DocumentDbRepositoryAuthKey = AuthKey,
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl
             }, factory, logger, telemetryLogger);
 
             // 748e572a-e0cf-4e93-9b1b-f2b11d3df0b9
