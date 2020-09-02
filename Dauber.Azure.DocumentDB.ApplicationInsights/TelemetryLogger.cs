@@ -26,6 +26,7 @@ namespace Dauber.Azure.DocumentDB.ApplicationInsights
                 true // We assume this call is successful, otherwise an exception would be thrown before.
             );
             dependency.Metrics[TelemetryKeys.RequestCharge] = requestCharge;
+            dependency.Metrics[TelemetryKeys.Elapsed] = duration;
             dependency.Properties[TelemetryKeys.Method] = methodName;
             dependency.Properties[TelemetryKeys.Filename] = file;
             dependency.Properties[TelemetryKeys.Line] = lineNumber.ToString();

@@ -58,36 +58,42 @@ namespace Dauber.Azure.DocumentDb
         public async Task<IEnumerable<TReturnType>> GetAsync<TEntityType, TReturnType>(string query, [CallerMemberName] string callerName = "", [CallerFilePath] string path = "", [CallerLineNumber] int lineNumber = 0) where TEntityType : IViewModel, new() where TReturnType : new()
         {            
             var client = await ClientFactory.GetContainerAsync(Settings).ConfigureAwait(false);
-            var iterator = client.GetItemQueryIterator<TReturnType>(query, null, new QueryRequestOptions
-            {
-                MaxConcurrency = 1
-            });
             var results = new List<TReturnType>();
-            double requestCharge = 0;
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            while (iterator.HasMoreResults)
-            {
-                try
-                {
-                    var result = await iterator.ReadNextAsync().ConfigureAwait(false);
-                    requestCharge += result.RequestCharge;
-                    var list = result.ToList();
-                    if (list.Count > 0)
-                        results.AddRange(list);
-                }                
-                catch (CosmosException ex)
-                {
-                    // don't throw an exception if the resource is not found, instead, indicate this by returning null
-                    if (ex.StatusCode == System.Net.HttpStatusCode.NotFound) continue;
 
-                    throw;
+            using (var iterator = client.GetItemQueryIterator<TReturnType>(query, null, new QueryRequestOptions
+            {
+                MaxConcurrency = 0,
+                MaxBufferedItemCount = 100
+            }))
+            {
+                double requestCharge = 0;
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                while (iterator.HasMoreResults)
+                {
+                    try
+                    {
+                        var result = await iterator.ReadNextAsync().ConfigureAwait(false);
+                        requestCharge += result.RequestCharge;
+                        var list = result.ToList();
+                        if (list.Count > 0)
+                            results.AddRange(list);
+                    }
+                    catch (CosmosException ex)
+                    {
+                        // don't throw an exception if the resource is not found, instead, indicate this by returning null
+                        if (ex.StatusCode == System.Net.HttpStatusCode.NotFound) continue;
+
+                        throw;
+                    }
                 }
+
+                stopwatch.Stop();
+
+                if (_telemetryLogger != null)
+                    await _telemetryLogger.Log("GetAsync", requestCharge, stopwatch.ElapsedMilliseconds, callerName,
+                        GetFilename(path), lineNumber, query).ConfigureAwait(false);
             }
-            stopwatch.Stop();
-            
-            if(_telemetryLogger != null)
-                await _telemetryLogger.Log("GetAsync", requestCharge, stopwatch.ElapsedMilliseconds, callerName, GetFilename(path), lineNumber, query).ConfigureAwait(false);
 
             return results;
         }
@@ -97,6 +103,17 @@ namespace Dauber.Azure.DocumentDb
             var task = GetAsync<TEntityType, TReturnType>(query, callerName, path, lineNumber);
             task.Wait();
             return task.Result;
+        }
+
+        public async Task<T> GetUpsertable<T>(string whereClause, string documentPlaceHolder = "c", [CallerMemberName] string callerName = "", [CallerFilePath] string path = "", [CallerLineNumber] int lineNumber = 0) where T : IViewModel, new()
+        {
+            var query = await GetAsync<T, T>($"SELECT {documentPlaceHolder}.id, {documentPlaceHolder}._etag FROM {documentPlaceHolder} WHERE {documentPlaceHolder}.DocType = '{typeof(T).Name}' AND ({whereClause})", callerName, path, lineNumber).ConfigureAwait(false);
+            var result = await query.AsQueryable().QueryFirstOrDefault(callerName, path, lineNumber).ConfigureAwait(false);
+            
+            if (result == null)
+                return new T {Id = Guid.NewGuid()};
+
+            return result;
         }
 
         public async Task<IEnumerable<T>> GetAsync<T>(string query, [CallerMemberName] string callerName = "", [CallerFilePath] string path = "", [CallerLineNumber] int lineNumber = 0) where T : IViewModel, new()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Dauber.Core;
 using Microsoft.Azure.Cosmos;
@@ -30,8 +31,8 @@ namespace Dauber.Azure.DocumentDb
                 if (_containers.ContainsKey(key)) return _containers[key];
 
                 _logger.Debug(Common.LoggerContext, "Creating DocumentDb Client for {0}", settings.DocumentDbRepositoryEndpointUrl);
-                    
-                var client = new CosmosClient(settings.DocumentDbRepositoryEndpointUrl, settings.DocumentDbRepositoryAuthKey);            
+                settings.CosmosClientOptions.RequestTimeout = new TimeSpan();
+                var client = new CosmosClient(settings.DocumentDbRepositoryEndpointUrl, settings.DocumentDbRepositoryAuthKey, settings.CosmosClientOptions);
                 var database = client.GetDatabase(settings.DocumentDbRepositoryDatabaseId);            
                 var container = database.GetContainer(settings.DocumentDbRepositoryCollectionId);
 

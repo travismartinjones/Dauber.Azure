@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SimpleCqrs" Version="2.1.0" />
+    <PackageReference Include="SimpleCqrs" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>

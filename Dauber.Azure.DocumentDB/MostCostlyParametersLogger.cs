@@ -13,6 +13,8 @@ namespace Dauber.Azure.DocumentDb
         {
             public string Content { get; set; }
             public double RequestCharge { get; set; }
+            public double Duration { get; set; }
+            public int Count { get; set; }
         }
 
         private static readonly ConcurrentDictionary<string,ParameterLoggerValue> MostCostly = new ConcurrentDictionary<string, ParameterLoggerValue>();
@@ -21,7 +23,7 @@ namespace Dauber.Azure.DocumentDb
         {
             var key = $"{file}.{methodName}{lineNumber}";
 
-            if (MostCostly.ContainsKey(key) && MostCostly[key].RequestCharge < requestCharge) return;
+            if (MostCostly.ContainsKey(key) && MostCostly[key].Duration < duration) return;
 
             var formattedContent = context;
             var match = Regex.Match(context, $"WHERE(.+)", RegexOptions.Singleline);
@@ -31,11 +33,15 @@ namespace Dauber.Azure.DocumentDb
             MostCostly.AddOrUpdate(key, s => new ParameterLoggerValue
             {
                 Content = formattedContent,
-                RequestCharge = requestCharge
+                RequestCharge = requestCharge,
+                Duration = duration,
+                Count = 1
             }, (s, value) =>
             {
                 value.Content = formattedContent;
                 value.RequestCharge = requestCharge;
+                value.Duration = duration;
+                value.Count += 1;
                 return value;
             });
         }
@@ -54,12 +60,12 @@ namespace Dauber.Azure.DocumentDb
         public static string ToCsv()
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("Source,Request Units,Content");
+            stringBuilder.AppendLine("Source,Request Units,Duration,Count,Content");
             var keys = MostCostly.Keys.ToList();
             foreach (var key in keys)
             {
                 var value = MostCostly[key];
-                stringBuilder.AppendLine($"{key},{value.RequestCharge},\"{CleanupContentForCsv(value.Content)}\"");
+                stringBuilder.AppendLine($"{key},{value.RequestCharge},{value.Duration},{value.Count},\"{CleanupContentForCsv(value.Content)}\"");
             }
             return stringBuilder.ToString();
         }

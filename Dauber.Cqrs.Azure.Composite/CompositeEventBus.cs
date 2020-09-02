@@ -11,7 +11,6 @@ namespace Dauber.Cqrs.Azure.Composite
         private readonly IEventBus _hubEventBus;
         private readonly IEventBus _serviceBusEventBus;
         private readonly IAppSettings _appSettings;
-        private readonly IEnumerable<IEventBus> _buses;
 
         public CompositeEventBus(
             IEventBus hubEventBus,
@@ -47,7 +46,7 @@ namespace Dauber.Cqrs.Azure.Composite
 
         public bool IsEventTypeHandled(DomainEvent domainEvent)
         {
-            return _buses.Any(x => x.IsEventTypeHandled(domainEvent));
+            return _hubEventBus.IsEventTypeHandled(domainEvent) || _serviceBusEventBus.IsEventTypeHandled(domainEvent);
         }
     }
 }

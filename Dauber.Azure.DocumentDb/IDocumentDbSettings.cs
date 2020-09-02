@@ -1,4 +1,6 @@
-﻿namespace Dauber.Azure.DocumentDb
+﻿using Microsoft.Azure.Cosmos;
+
+namespace Dauber.Azure.DocumentDb
 {
     public interface IDocumentDbSettings
     {
@@ -7,5 +9,6 @@
         string DocumentDbRepositoryDatabaseId { get; }
         string DocumentDbRepositoryCollectionId { get; }
         bool IsPartitioned { get; }
+        CosmosClientOptions CosmosClientOptions { get; }
     }
 }
