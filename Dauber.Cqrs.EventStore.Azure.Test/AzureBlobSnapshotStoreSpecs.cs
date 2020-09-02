@@ -15,13 +15,13 @@ namespace Dauber.Cqrs.EventStore.Azure.Test
 {
     public class BlobSettings : IBlobSettings
     {
-        public string ConnectionString => "DefaultEndpointsProtocol=https;AccountName=dauberfleetblobdev;AccountKey=vSikpaLJIaEUNRJXJpbeREUyXxbgaJy2iZHLjT15NoZu9I4Ug1A52dpsCj2nGG79h/JHNCVVZxewILYxCxckHg==;EndpointSuffix=core.windows.net";
+        public string ConnectionString => "";
         public bool IsContainerCreatedIfMissing => false;
     }
 
     public class AzureTableSettings : IAzureTableSettings
     {
-        public string AzureStorageConnectionString => "DefaultEndpointsProtocol=https;AccountName=dauberfleetdeves;AccountKey=c8LQs9btJsfNkdGHRLwZHkynP6MyPsHwtZkkQ7Xh/2kj0YHDeaurDVKwPRcD5NfxhW9XFG1rEUXoEXPMarsbOw==";
+        public string AzureStorageConnectionString => "";
     }
 
     public class SnapshotContent : Snapshot
