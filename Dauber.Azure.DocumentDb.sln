@@ -39,9 +39,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.ApplicationIns
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.DocumentDB.ApplicationInsights", "Dauber.Azure.DocumentDB.ApplicationInsights\Dauber.Azure.DocumentDB.ApplicationInsights.csproj", "{6ACD15BE-F119-45CF-9547-1215DBED23CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.EventStore.Azure", "Dauber.Cqrs.EventStore.Azure\Dauber.Cqrs.EventStore.Azure.csproj", "{C0A79CEC-7754-47B9-9657-36037C948865}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.EventStore.Azure", "Dauber.Cqrs.EventStore.Azure\Dauber.Cqrs.EventStore.Azure.csproj", "{C0A79CEC-7754-47B9-9657-36037C948865}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.EventStore.Azure.Test", "Dauber.Cqrs.EventStore.Azure.Test\Dauber.Cqrs.EventStore.Azure.Test.csproj", "{7FDEB769-B692-4693-A08E-8C09F8D6859C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.EventStore.Azure.Test", "Dauber.Cqrs.EventStore.Azure.Test\Dauber.Cqrs.EventStore.Azure.Test.csproj", "{7FDEB769-B692-4693-A08E-8C09F8D6859C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.Azure.EventHub.Test", "Dauber.Cqrs.Azure.EventHub.Test\Dauber.Cqrs.Azure.EventHub.Test.csproj", "{66A7CF54-2C0C-4804-856C-88087612862F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +127,10 @@ Global
 		{7FDEB769-B692-4693-A08E-8C09F8D6859C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FDEB769-B692-4693-A08E-8C09F8D6859C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FDEB769-B692-4693-A08E-8C09F8D6859C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66A7CF54-2C0C-4804-856C-88087612862F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66A7CF54-2C0C-4804-856C-88087612862F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66A7CF54-2C0C-4804-856C-88087612862F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66A7CF54-2C0C-4804-856C-88087612862F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -133,6 +139,7 @@ Global
 		{89D7E70B-5500-4C60-BDEF-3D76CDE52944} = {779EC665-8266-4608-B21C-F3C731F7F396}
 		{9A0E7457-230A-407E-B479-AF7AEDF66B68} = {779EC665-8266-4608-B21C-F3C731F7F396}
 		{7FDEB769-B692-4693-A08E-8C09F8D6859C} = {779EC665-8266-4608-B21C-F3C731F7F396}
+		{66A7CF54-2C0C-4804-856C-88087612862F} = {779EC665-8266-4608-B21C-F3C731F7F396}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6F3F8285-269F-4A95-B3DA-A86C4E1D02C5}

@@ -46,7 +46,12 @@ namespace Dauber.Cqrs.Azure.ServiceBus
         {
             throw new NotImplementedException("Use async signature SendAsync instead.");
         }
-        
+
+        public bool IsCommandTypeHandled(ICommand command)
+        {
+            return command is ICommand;
+        }
+
         public async Task SendAsync<TCommand>(TCommand command, DateTime? enqueueTime = null) where TCommand : ICommand, HighIronRanch.Azure.ServiceBus.Contracts.ICommand
         {            
             ValidateCommand(command);

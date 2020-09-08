@@ -220,7 +220,7 @@ WHERE  c.DocType = 'SiteOperator' AND 'PMR' IN (c.NameMeta[0],c.NameMeta[1],c.Na
                 DocumentDbRepositoryDatabaseId = "dauber-fleet-database",
                 DocumentDbRepositoryCollectionId = "dauber-fleet-container",
                 DocumentDbRepositoryAuthKey = AuthKey,
-                DocumentDbRepositoryEndpointUrl = EntryPointUrl
+                DocumentDbRepositoryEndpointUrl = EntryPointUrl,
                 IsPartitioned = true
             }, factory, logger, telemetryLogger);
             // 748e572a-e0cf-4e93-9b1b-f2b11d3df0b9

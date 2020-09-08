@@ -50,6 +50,11 @@ namespace Dauber.Cqrs.Azure.EventHub
             throw new NotImplementedException("Use async signature SendAsync instead.");
         }
 
+        public bool IsCommandTypeHandled(ICommand command)
+        {
+            return command is IHubCommand;
+        }
+
         private static void ValidateCommand<TCommand>(TCommand command) where TCommand : ICommand
         {
             var validators = IoC.GetAllInstances<IValidator<TCommand>>();

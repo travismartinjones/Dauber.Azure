@@ -36,20 +36,33 @@ namespace Dauber.Cqrs.Azure.Composite
             throw new NotImplementedException("Use async signature SendAsync instead.");
         }
 
-        public async Task<int> ExecuteAsync<TCommand>(TCommand command) where TCommand : ICommand, IHubCommand
-        {
-            if (_appSettings.GetByKey("IsEventHubEnabled", false))
-                return await _hubCommandBus.ExecuteAsync(command).ConfigureAwait(false);
-            
-            return await _serviceCommandBus.ExecuteAsync(command).ConfigureAwait(false);
-        }
-
         public async Task SendAsync<TCommand>(TCommand command) where TCommand : ICommand, IHubCommand
         {
             if (_appSettings.GetByKey("IsEventHubEnabled", false))
-                await _hubCommandBus.SendAsync(command).ConfigureAwait(false);
-            else
-                await _serviceCommandBus.SendAsync(command).ConfigureAwait(false);
+            {
+                if (_hubCommandBus.IsCommandTypeHandled(command))
+                {
+                    await _hubCommandBus.SendAsync(command).ConfigureAwait(false);
+                    return;
+                }
+            }
+
+            await _serviceCommandBus.SendAsync(command).ConfigureAwait(false);
+        }
+
+        public async Task<int> ExecuteAsync<TCommand>(TCommand command) where TCommand : ICommand, HighIronRanch.Azure.ServiceBus.Contracts.ICommand
+        {
+            return await _serviceCommandBus.ExecuteAsync(command).ConfigureAwait(false);
+        }
+
+        public async Task SendAsync<TCommand>(TCommand command, DateTime? enqueueTime = null) where TCommand : ICommand, HighIronRanch.Azure.ServiceBus.Contracts.ICommand
+        {
+            await _serviceCommandBus.SendAsync(command, enqueueTime).ConfigureAwait(false);
+        }
+
+        public bool IsCommandTypeHandled(ICommand command)
+        {
+            return _hubCommandBus.IsCommandTypeHandled(command) || _serviceCommandBus.IsCommandTypeHandled(command);
         }
     }
 }
