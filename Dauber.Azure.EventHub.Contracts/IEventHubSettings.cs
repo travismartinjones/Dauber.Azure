@@ -1,8 +1,16 @@
-﻿namespace Dauber.Azure.EventHub.Contracts
+﻿using System.Collections.Generic;
+
+namespace Dauber.Azure.EventHub.Contracts
 {
+    public class EventHubConnectionString
+    {
+        public string Namespace { get; set; }
+        public string ConnectionString { get; set; }
+    }
+
     public interface IEventHubSettings
     {
-        string AzureEventHubConnectionString { get; }
+        IEnumerable<EventHubConnectionString> AzureEventHubConnectionStrings { get; }
         string AzureEventHubCheckpointConnectionString { get; }
         string ServiceBusMasterPrefix { get; }
         // eg. s.site

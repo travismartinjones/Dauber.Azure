@@ -7,6 +7,7 @@ using Dauber.Core.Exceptions;
 using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.EventHubs.Processor;
 using Newtonsoft.Json;
+using ILogger = Dauber.Core.ILogger;
 
 namespace Dauber.Azure.EventHub
 {
@@ -19,15 +20,16 @@ namespace Dauber.Azure.EventHub
         private readonly IHubCommandErrorBus _hubCommandErrorBus;
         private readonly IDictionary<Type, Type> _commandHandlers;
         private readonly IDictionary<Type, ISet<Type>> _eventHandlers;
+        private readonly ILogger _logger;
 
-        public EventHubProcessor(
-            IEventHubSettings settings,
-            IHandlerActivator handlerActivator, 
+        public EventHubProcessor(IEventHubSettings settings,
+            IHandlerActivator handlerActivator,
             IExceptionLogger exceptionLogger,
             IHubEventErrorBus hubEventErrorBus,
             IHubCommandErrorBus hubCommandErrorBus,
             IDictionary<Type, Type> commandHandlers,
-            IDictionary<Type, ISet<Type>> eventHandlers)
+            IDictionary<Type, ISet<Type>> eventHandlers, 
+            ILogger logger)
         {
             _settings = settings;
             _handlerActivator = handlerActivator;
@@ -36,15 +38,18 @@ namespace Dauber.Azure.EventHub
             _hubCommandErrorBus = hubCommandErrorBus;
             _commandHandlers = commandHandlers;
             _eventHandlers = eventHandlers;
+            _logger = logger;
         }
 
         public Task OpenAsync(PartitionContext context)
         {
+            _logger.Information(nameof(EventHubProcessor), $"Opening {context.ConsumerGroupName} {context.EventHubPath} {context.PartitionId}");
             return Task.CompletedTask;
         }
 
         public Task CloseAsync(PartitionContext context, CloseReason reason)
         {
+            _logger.Information(nameof(EventHubProcessor), $"Closing {context.ConsumerGroupName} {context.EventHubPath} {context.PartitionId} {reason}");
             return Task.CompletedTask;
         }
 

@@ -97,7 +97,7 @@ namespace Dauber.Azure.EventHub
 
         public async Task<EventHubService> BuildAsync()
         {
-            var hubService = new EventHubService(_handlerActivator, _exceptionLogger, _settings, _hubEventErrorBus, _hubCommandErrorBus);
+            var hubService = new EventHubService(_handlerActivator, _exceptionLogger, _settings, _hubEventErrorBus, _hubCommandErrorBus, _logger);
 
             CreateHandledQueuesInAssembliesAsync(hubService);
             CreateSpecificHandledQueuesAsync(hubService);

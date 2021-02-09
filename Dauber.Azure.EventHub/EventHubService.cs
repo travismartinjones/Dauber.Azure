@@ -9,6 +9,7 @@ using Dauber.Core;
 using Dauber.Core.Exceptions;
 using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.EventHubs.Processor;
+using ILogger = Dauber.Core.ILogger;
 
 namespace Dauber.Azure.EventHub
 {
@@ -19,24 +20,31 @@ namespace Dauber.Azure.EventHub
         private readonly IEventHubSettings _settings;
         private readonly IHubEventErrorBus _hubEventErrorBus;
         private readonly IHubCommandErrorBus _hubCommandErrorBus;
+        private readonly ILogger _logger;
         private IDictionary<Type, EventProcessorHost> _eventProcessorHosts = new ConcurrentDictionary<Type, EventProcessorHost>();
         private IDictionary<Type, EventHubClient> _eventClients = new ConcurrentDictionary<Type, EventHubClient>();
         private IDictionary<Type, EventHubClient> _commandClients = new ConcurrentDictionary<Type, EventHubClient>();
         private readonly IDictionary<Type, Type> _commandHandlers = new ConcurrentDictionary<Type, Type>();
         private readonly IDictionary<Type, ISet<Type>> _eventHandlers = new ConcurrentDictionary<Type, ISet<Type>>();
+        private readonly Dictionary<string, string> _connectionStrings = new Dictionary<string, string>();
 
-        public EventHubService(
-            IHandlerActivator handlerActivator, 
-            IExceptionLogger exceptionLogger, 
+        public EventHubService(IHandlerActivator handlerActivator,
+            IExceptionLogger exceptionLogger,
             IEventHubSettings settings,
             IHubEventErrorBus hubEventErrorBus,
-            IHubCommandErrorBus hubCommandErrorBus)
+            IHubCommandErrorBus hubCommandErrorBus, 
+            ILogger logger)
         {
             _handlerActivator = handlerActivator;
             _exceptionLogger = exceptionLogger;
             _settings = settings;
             _hubEventErrorBus = hubEventErrorBus;
             _hubCommandErrorBus = hubCommandErrorBus;
+            _logger = logger;
+            foreach (var connection in _settings.AzureEventHubConnectionStrings)
+            {
+                _connectionStrings.Add(connection.Namespace, connection.ConnectionString);
+            }
         }
 
         public async Task SendAsync(IHubCommand command)
@@ -98,7 +106,7 @@ namespace Dauber.Azure.EventHub
             var eventProcessorHost = new EventProcessorHost(
                 messageType.GetEventHubName(),
                 typeof(IHubEvent).IsAssignableFrom(messageType) ? _settings.SubscriberName : PartitionReceiver.DefaultConsumerGroupName,
-                _settings.AzureEventHubConnectionString,
+                _connectionStrings[messageType.GetEventHubConnectionKey()],
                 _settings.AzureEventHubCheckpointConnectionString,
                 // the convention of the container name is the same as the event hub name, but with dots replaced with dashes
                 messageType.GetEventHubName().Replace(".","-") 
@@ -112,7 +120,7 @@ namespace Dauber.Azure.EventHub
                 return;
 
             var topicName = GetHubNameFromType(type);
-            var eventHubsConnectionStringBuilder = new EventHubsConnectionStringBuilder(_settings.AzureEventHubConnectionString)
+            var eventHubsConnectionStringBuilder = new EventHubsConnectionStringBuilder(_connectionStrings[type.GetEventHubConnectionKey()])
             {
                 EntityPath = topicName
             };
@@ -127,7 +135,7 @@ namespace Dauber.Azure.EventHub
                 return;
 
             var queueName = GetHubNameFromType(type);
-            var eventHubsConnectionStringBuilder = new EventHubsConnectionStringBuilder(_settings.AzureEventHubConnectionString)
+            var eventHubsConnectionStringBuilder = new EventHubsConnectionStringBuilder(_connectionStrings[type.GetEventHubConnectionKey()])
             {
                 EntityPath = queueName
             };
@@ -152,6 +160,7 @@ namespace Dauber.Azure.EventHub
         {
             foreach (var eventProcessorHost in _eventProcessorHosts.Values)
             {
+                _logger.Information(nameof(EventHubService), $"Registering {eventProcessorHost.HostName} {eventProcessorHost.ConsumerGroupName} { eventProcessorHost.EventHubPath}" );
                 await eventProcessorHost.RegisterEventProcessorFactoryAsync(
                     new EventProcessorFactory(
                         _settings,
@@ -160,7 +169,8 @@ namespace Dauber.Azure.EventHub
                         _hubEventErrorBus,
                         _hubCommandErrorBus,
                         _commandHandlers, 
-                        _eventHandlers)
+                        _eventHandlers,
+                        _logger)
                 ).ConfigureAwait(false);
             }
         }

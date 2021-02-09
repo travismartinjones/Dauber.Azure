@@ -48,8 +48,18 @@ namespace Dauber.Azure.DocumentDb
             }
             stopwatch.Stop();
             var duration = stopwatch.ElapsedMilliseconds;
-            
-            var logger = IoC.GetInstance<ITelemetryLogger>();
+
+            ITelemetryLogger logger;
+
+            try
+            {
+                logger = IoC.GetInstance<ITelemetryLogger>();
+            }
+            catch
+            {
+                return items;
+            }
+
             if (logger == null) return items;
             var filename = string.IsNullOrEmpty(path) ? "" : System.IO.Path.GetFileNameWithoutExtension(path);
             await logger.Log(type,requestCharge, duration, callerName, filename, lineNumber, sourceQuery.ToString()).ConfigureAwait(false);

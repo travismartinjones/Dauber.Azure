@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{779EC665-8266-4608-B21C-F3C731F7F396}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Event", "Event", "{779EC665-8266-4608-B21C-F3C731F7F396}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.Contracts", "Dauber.Cqrs.Contracts\Dauber.Cqrs.Contracts.csproj", "{8745706B-FB02-461F-8AB5-FD71BF4F45C8}"
 EndProject
@@ -39,9 +39,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.ApplicationIns
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Azure.DocumentDB.ApplicationInsights", "Dauber.Azure.DocumentDB.ApplicationInsights\Dauber.Azure.DocumentDB.ApplicationInsights.csproj", "{6ACD15BE-F119-45CF-9547-1215DBED23CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.EventStore.Azure", "Dauber.Cqrs.EventStore.Azure\Dauber.Cqrs.EventStore.Azure.csproj", "{C0A79CEC-7754-47B9-9657-36037C948865}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.EventStore.Azure", "Dauber.Cqrs.EventStore.Azure\Dauber.Cqrs.EventStore.Azure.csproj", "{C0A79CEC-7754-47B9-9657-36037C948865}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dauber.Cqrs.EventStore.Azure.Test", "Dauber.Cqrs.EventStore.Azure.Test\Dauber.Cqrs.EventStore.Azure.Test.csproj", "{7FDEB769-B692-4693-A08E-8C09F8D6859C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dauber.Cqrs.EventStore.Azure.Test", "Dauber.Cqrs.EventStore.Azure.Test\Dauber.Cqrs.EventStore.Azure.Test.csproj", "{7FDEB769-B692-4693-A08E-8C09F8D6859C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
